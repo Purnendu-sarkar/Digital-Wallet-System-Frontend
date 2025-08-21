@@ -6,6 +6,7 @@ import {
   Phone,
   MapPin,
 } from "lucide-react";
+import logo from "@/assets/icons/digital-wallet.png";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 
@@ -17,7 +18,10 @@ export default function Footer() {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10 mb-10">
           {/* Company Info */}
           <div className="space-y-4">
-            <h3 className="text-xl font-bold">Digital Wallet</h3>
+            <h3 className="flex items-center text-xl font-bold gap-2">
+              <img src={logo} alt="Logo" className="h-6 w-auto" />
+              Digital Wallet
+            </h3>
             <p className="text-muted-foreground leading-relaxed text-sm">
               A fast, secure and user-friendly wallet service. Manage your money
               anytime, anywhere with confidence.

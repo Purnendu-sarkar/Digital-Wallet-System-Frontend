@@ -1,5 +1,6 @@
 import InfoMenu from "@/components/info-menu";
-import Logo from "@/components/logo";
+// import Logo from "@/components/logo";
+import logo from "@/assets/icons/digital-wallet.png";
 import NotificationMenu from "@/components/notification-menu";
 import UserMenu from "@/components/user-menu";
 import { Button } from "@/components/ui/button";
@@ -81,8 +82,8 @@ export default function Navbar() {
           </Popover>
           {/* Main nav */}
           <div className="flex items-center gap-6">
-            <a href="#" className="text-primary hover:text-primary/90">
-              <Logo />
+            <a href="#" className="flex items-center gap-2">
+              <img src={logo} alt="Logo" className="h-8 w-auto" />
             </a>
             {/* Navigation menu */}
             <NavigationMenu className="max-md:hidden">
