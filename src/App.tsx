@@ -1,13 +1,12 @@
 import { Outlet } from "react-router";
-import { Button } from "./components/ui/button";
+import CommonLayout from "./components/layout/CommonLayout";
 
 function App() {
   return (
     <>
-      <h1>Welcome to the Digital Wallet System</h1>
-      <p>Your one-stop solution for managing your digital assets.</p>
-      <Button>Get Started</Button>
-      <Outlet></Outlet>
+      <CommonLayout>
+        <Outlet />
+      </CommonLayout>
     </>
   );
 }
