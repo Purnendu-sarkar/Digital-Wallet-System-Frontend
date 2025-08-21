@@ -1,5 +1,4 @@
 import InfoMenu from "@/components/info-menu";
-// import Logo from "@/components/logo";
 import logo from "@/assets/icons/digital-wallet.png";
 import NotificationMenu from "@/components/notification-menu";
 import UserMenu from "@/components/user-menu";
@@ -16,13 +15,14 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { ModeToggle } from "./ModeToggler";
+import { Link } from "react-router";
 
 // Navigation links array to be used in both desktop and mobile menus
 const navigationLinks = [
-  { href: "#", label: "Home" },
-  { href: "#", label: "Features" },
-  { href: "#", label: "Pricing" },
-  { href: "#", label: "About" },
+  { href: "/", label: "Home" },
+  { href: "/about", label: "About" },
+  { href: "/", label: "Features" },
+  { href: "/", label: "Pricing" },
 ];
 
 export default function Navbar() {
@@ -71,8 +71,8 @@ export default function Navbar() {
                 <NavigationMenuList className="flex-col items-start gap-0 md:gap-2">
                   {navigationLinks.map((link, index) => (
                     <NavigationMenuItem key={index} className="w-full">
-                      <NavigationMenuLink href={link.href} className="py-1.5">
-                        {link.label}
+                      <NavigationMenuLink asChild className="py-1.5">
+                        <Link to={link.href}>{link.label} </Link>
                       </NavigationMenuLink>
                     </NavigationMenuItem>
                   ))}
@@ -82,8 +82,8 @@ export default function Navbar() {
           </Popover>
           {/* Main nav */}
           <div className="flex items-center gap-6">
-            <a href="#" className="flex items-center gap-2">
-              <img src={logo} alt="Logo" className="h-8 w-auto" />
+            <a href="/" className="flex items-center gap-2 ">
+              <img src={logo} alt="Logo" className="h-6 w-auto" />
             </a>
             {/* Navigation menu */}
             <NavigationMenu className="max-md:hidden">
@@ -91,10 +91,10 @@ export default function Navbar() {
                 {navigationLinks.map((link, index) => (
                   <NavigationMenuItem key={index}>
                     <NavigationMenuLink
-                      href={link.href}
+                      asChild
                       className="text-muted-foreground hover:text-primary py-1.5 font-medium"
                     >
-                      {link.label}
+                      <Link to={link.href}>{link.label} </Link>
                     </NavigationMenuLink>
                   </NavigationMenuItem>
                 ))}
