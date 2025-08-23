@@ -19,3 +19,24 @@ export interface ISidebarItem {
 }
 
 export type TRole = "ADMIN" | "AGENT" | "USER";
+
+
+export interface IMeta {
+  page: number;
+  limit: number;
+  total: number;
+  totalPage: number;
+}
+
+export interface IUser {
+  _id: string;
+  name: string;
+  email: string;
+  role: TRole;
+  isActive: boolean;
+  isDeleted: boolean;
+  isVerified: boolean;
+  agentApprovalStatus?: "PENDING" | "APPROVED" | "REJECTED";
+  createdAt?: string;
+  updatedAt?: string;
+}
