@@ -35,11 +35,11 @@ export function LoginForm({
 
         // Role-based redirection
         if (res.data.user.role === "USER") {
-          navigate("/user/dashboard");
+          navigate("/user/overview");
         } else if (res.data.user.role === "AGENT") {
-          navigate("/agent/dashboard");
+          navigate("/agent/overview");
         } else if (res.data.user.role === "ADMIN") {
-          navigate("/admin/dashboard");
+          navigate("/admin/overview");
         } else {
           navigate("/");
         }
