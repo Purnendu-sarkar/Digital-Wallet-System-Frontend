@@ -9,6 +9,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import config from "@/config";
 import Password from "@/components/ui/Password";
 import { cn } from "@/lib/utils";
 import { useLoginMutation } from "@/redux/features/auth/auth.api";
@@ -28,24 +29,44 @@ export function LoginForm({
   const onSubmit: SubmitHandler<FieldValues> = async (data) => {
     try {
       const res = await login(data).unwrap();
-      toast.success("Logged in successfully");
-      console.log("Login response:", res);
-      // Role-based redirection
-      if (res.data.user.role === "USER") {
-        navigate("/user/dashboard");
-      } else if (res.data.user.role === "AGENT") {
-        navigate("/agent/dashboard");
-      } else if (res.data.user.role === "ADMIN") {
-        navigate("/admin/dashboard");
+      if (res.success) {
+        toast.success("Logged in successfully");
+        console.log("Login response:", res);
+
+        // Role-based redirection
+        if (res.data.user.role === "USER") {
+          navigate("/user/dashboard");
+        } else if (res.data.user.role === "AGENT") {
+          navigate("/agent/dashboard");
+        } else if (res.data.user.role === "ADMIN") {
+          navigate("/admin/dashboard");
+        } else {
+          navigate("/");
+        }
       }
     } catch (err: any) {
-      toast.error(err?.data?.message || "Login failed");
       console.error("Login error:", err);
-      // if (err.status === 401) {
-      //   navigate("/verify", { state: data.email });
-      // }
+      console.log("Login error response:", err?.data);
+
+      const errorMessage =
+        err?.data?.message ||
+        err?.data?.error ||
+        JSON.stringify(err?.data) ||
+        "Login failed";
+
+      if (errorMessage === "Password does not match") {
+        toast.error("Invalid credentials");
+      }
+
+      if (errorMessage === "User is not verified") {
+        toast.error("Your account is not verified");
+        navigate("/verify", { state: { email: data?.email } });
+      } else {
+        toast.error(errorMessage || "Login failed");
+      }
     }
   };
+  console.log(config.baseUrl);
 
   return (
     <div className={cn("flex flex-col gap-6", className)} {...props}>
@@ -106,11 +127,7 @@ export function LoginForm({
           type="button"
           variant="outline"
           className="w-full cursor-pointer"
-          onClick={() =>
-            (window.location.href = `${
-              import.meta.env.VITE_BASE_URL
-            }/auth/google`)
-          } // Google login
+          onClick={() => window.open(`${config.baseUrl}/auth/google`, "_self")}
         >
           Login with Google
         </Button>

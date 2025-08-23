@@ -1,33 +1,36 @@
 import config from "@/config";
 import axios from "axios";
 
+
 export const axiosInstance = axios.create({
   baseURL: config.baseUrl,
+  withCredentials: true,
 });
 
-// Request interceptor for token
+// Add a request interceptor
 axiosInstance.interceptors.request.use(
   function (config) {
-    const accessToken = localStorage.getItem("accessToken");
-    if (accessToken) {
-      config.headers.Authorization = `Bearer ${accessToken}`;
-    }
+    // Do something before request is sent
+    console.log("Axios", config);
     return config;
   },
   function (error) {
+    // Do something with request error
     return Promise.reject(error);
   }
 );
 
-// Response interceptor
+// Add a response interceptor
 axiosInstance.interceptors.response.use(
-  function (response) {
+  function onFulfilled(response) {
+    // Any status code that lie within the range of 2xx cause this function to trigger
+    // Do something with response data
+    console.log("Axios", response);
     return response;
   },
-  function (error) {
-    if (error.response.status === 401) {
-      // Refresh token logic : TODO
-    }
+  function onRejected(error) {
+    // Any status codes that falls outside the range of 2xx cause this function to trigger
+    // Do something with response error
     return Promise.reject(error);
   }
 );
