@@ -1,7 +1,6 @@
 import InfoMenu from "@/components/info-menu";
 import logo from "@/assets/icons/digital-wallet.png";
 import NotificationMenu from "@/components/notification-menu";
-import UserMenu from "@/components/user-menu";
 import { Button } from "@/components/ui/button";
 import {
   NavigationMenu,
@@ -16,6 +15,8 @@ import {
 } from "@/components/ui/popover";
 import { ModeToggle } from "./ModeToggler";
 import { Link } from "react-router";
+import { useUserInfoQuery } from "@/redux/features/auth/auth.api";
+import UserMenu from "../user-menu";
 
 // Navigation links array to be used in both desktop and mobile menus
 const navigationLinks = [
@@ -26,6 +27,8 @@ const navigationLinks = [
 ];
 
 export default function Navbar() {
+  const { data: user } = useUserInfoQuery(null);
+
   return (
     <header className="border-b">
       <div className="container mx-auto px-4 flex h-16 items-center justify-between gap-4">
@@ -113,7 +116,14 @@ export default function Navbar() {
             <NotificationMenu />
           </div>
           {/* User menu */}
-          <UserMenu />
+          {user?.data ? (
+            <UserMenu user={user.data} /> 
+          ) : (
+            <Link to="/login">
+              <Button variant="outline">Login</Button>
+            </Link>
+          )}
+          {/* <UserMenu /> */}
         </div>
       </div>
     </header>
