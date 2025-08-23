@@ -52,13 +52,11 @@ export default function ManageUsers() {
   const { data, isLoading } = useGetAllUsersQuery(queryParams);
 
   const users = data?.data || [];
-  const meta = data?.meta || { page: 1, limit: 10, total: 0 };
-
+  const meta = data?.meta || { page: 1, limit: 10, total: 0, totalPage: 1 };
 
   const handlePagination = (page: number) => {
     setQueryParams((prev) => ({ ...prev, page }));
   };
-
 
   const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
     setQueryParams((prev) => ({
@@ -68,7 +66,6 @@ export default function ManageUsers() {
     }));
   };
 
-
   const handleRoleFilter = (value: string) => {
     setQueryParams((prev) => ({
       ...prev,
@@ -77,17 +74,25 @@ export default function ManageUsers() {
     }));
   };
 
+  const handleLimitChange = (value: string) => {
+    setQueryParams((prev) => ({
+      ...prev,
+      limit: Number(value),
+      page: 1,
+    }));
+  };
+
   if (isLoading) {
     return <Skeleton className="h-96 w-full" />;
   }
-
-  console.log(users);
-  console.log("meta:", meta);
 
   return (
     <Card>
       <CardHeader>
         <CardTitle>Manage Users</CardTitle>
+        <p className="text-sm text-muted-foreground">
+          Total Users: {meta.total}
+        </p>
       </CardHeader>
       <CardContent>
         <div className="flex items-center space-x-4 mb-4">
@@ -105,10 +110,25 @@ export default function ManageUsers() {
               <SelectValue placeholder="Filter by Role" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="All">All</SelectItem>
+              <SelectItem value="ALL">All</SelectItem>
               <SelectItem value={role.user}>User</SelectItem>
               <SelectItem value={role.agent}>Agent</SelectItem>
               <SelectItem value={role.admin}>Admin</SelectItem>
+            </SelectContent>
+          </Select>
+          <Select
+            onValueChange={handleLimitChange}
+            value={queryParams.limit.toString()}
+          >
+            <SelectTrigger className="w-[120px]">
+              <SelectValue placeholder="Rows per page" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="5">5</SelectItem>
+              <SelectItem value="10">10</SelectItem>
+              <SelectItem value="20">20</SelectItem>
+              <SelectItem value="50">50</SelectItem>
+              <SelectItem value="100">100</SelectItem>
             </SelectContent>
           </Select>
         </div>
