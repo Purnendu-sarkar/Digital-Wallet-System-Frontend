@@ -1,10 +1,21 @@
 import { baseApi } from "@/redux/baseApi";
 
+export interface IUser {
+  _id: string;
+  name: string;
+  email: string;
+}
+
 export interface ITransaction {
   _id: string;
   senderId: string;
   receiverId: string;
+  agentId?: string;
+  sender?: IUser;
+  receiver?: IUser;
+  agent?: IUser;
   amount: number;
+  fee?: number;
   status: "PENDING" | "SUCCESS" | "FAILED";
   createdAt: string;
   updatedAt: string;
