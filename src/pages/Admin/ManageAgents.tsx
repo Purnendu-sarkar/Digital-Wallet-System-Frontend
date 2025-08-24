@@ -1,7 +1,11 @@
+/* eslint-disable react-hooks/rules-of-hooks */
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import * as React from "react";
 import {
   useGetAllUsersQuery,
   useGetUserByIdQuery,
+  useApproveAgentMutation,
+  useSuspendAgentMutation,
 } from "@/redux/features/user/userApi";
 import { Input } from "@/components/ui/input";
 import {
@@ -13,6 +17,24 @@ import {
 } from "@/components/ui/select";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 import type {
   ColumnDef,
   PaginationState,
@@ -21,13 +43,7 @@ import type {
 import type { IUser } from "@/types";
 import { DataTable } from "@/components/ui/data-table";
 import { Button } from "@/components/ui/button";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
+import { toast } from "sonner";
 
 const columns: ColumnDef<IUser>[] = [
   {
@@ -50,12 +66,147 @@ const columns: ColumnDef<IUser>[] = [
   {
     id: "actions",
     header: "Actions",
-    cell: () => {
-      return (
-        <Button variant="outline" size="sm" className="text-blue-600">
-          Action
-        </Button>
-      );
+    cell: ({ row }) => {
+      const user = row.original;
+      const [approveAgent, { isLoading: isApproving }] =
+        useApproveAgentMutation();
+      const [suspendAgent, { isLoading: isSuspending }] =
+        useSuspendAgentMutation();
+
+      const handleApprove = async () => {
+        try {
+          await approveAgent(user._id).unwrap();
+          toast.success("Agent approved successfully");
+        } catch (error) {
+          toast.error("Failed to approve agent");
+        }
+      };
+
+      const handleSuspend = async () => {
+        try {
+          await suspendAgent(user._id).unwrap();
+          toast.success("Agent suspended successfully");
+        } catch (error) {
+          toast.error("Failed to suspend agent");
+        }
+      };
+
+      const handleReactivate = async () => {
+        try {
+          await approveAgent(user._id).unwrap();
+          toast.success("Agent reactivated successfully");
+        } catch (error) {
+          toast.error("Failed to reactivate agent");
+        }
+      };
+
+      const renderActionButton = () => {
+        if (user.agentApprovalStatus === "PENDING") {
+          return (
+            <AlertDialog>
+              <AlertDialogTrigger asChild>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  disabled={isApproving}
+                  className="text-green-600"
+                >
+                  Approve
+                </Button>
+              </AlertDialogTrigger>
+              <AlertDialogContent>
+                <AlertDialogHeader>
+                  <AlertDialogTitle>Are you sure?</AlertDialogTitle>
+                  <AlertDialogDescription>
+                    This will approve the agent.
+                  </AlertDialogDescription>
+                </AlertDialogHeader>
+                <AlertDialogFooter>
+                  <AlertDialogCancel>Cancel</AlertDialogCancel>
+                  <AlertDialogAction
+                    onClick={handleApprove}
+                    disabled={isApproving}
+                  >
+                    Approve
+                  </AlertDialogAction>
+                </AlertDialogFooter>
+              </AlertDialogContent>
+            </AlertDialog>
+          );
+        }
+
+        if (user.agentApprovalStatus === "APPROVED") {
+          return (
+            <AlertDialog>
+              <AlertDialogTrigger asChild>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  disabled={isSuspending}
+                  className="text-red-600"
+                >
+                  Suspend
+                </Button>
+              </AlertDialogTrigger>
+              <AlertDialogContent>
+                <AlertDialogHeader>
+                  <AlertDialogTitle>Are you sure?</AlertDialogTitle>
+                  <AlertDialogDescription>
+                    This will suspend the agent.
+                  </AlertDialogDescription>
+                </AlertDialogHeader>
+                <AlertDialogFooter>
+                  <AlertDialogCancel>Cancel</AlertDialogCancel>
+                  <AlertDialogAction
+                    onClick={handleSuspend}
+                    disabled={isSuspending}
+                  >
+                    Suspend
+                  </AlertDialogAction>
+                </AlertDialogFooter>
+              </AlertDialogContent>
+            </AlertDialog>
+          );
+        }
+
+        if (user.agentApprovalStatus === "SUSPENDED") {
+          return (
+            <AlertDialog>
+              <AlertDialogTrigger asChild>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  disabled={isApproving}
+                  className="text-blue-600"
+                >
+                  Reactivate
+                </Button>
+              </AlertDialogTrigger>
+              <AlertDialogContent>
+                <AlertDialogHeader>
+                  <AlertDialogTitle>Are you sure?</AlertDialogTitle>
+                  <AlertDialogDescription>
+                    This will reactivate the agent.
+                  </AlertDialogDescription>
+                </AlertDialogHeader>
+                <AlertDialogFooter>
+                  <AlertDialogCancel>Cancel</AlertDialogCancel>
+                  <AlertDialogAction
+                    onClick={handleReactivate}
+                    disabled={isApproving}
+                  >
+                    Reactivate
+                  </AlertDialogAction>
+                </AlertDialogFooter>
+              </AlertDialogContent>
+            </AlertDialog>
+          );
+        }
+
+        return null;
+      };
+
+      return <div className="flex gap-2">{renderActionButton()}</div>;
     },
   },
   {
@@ -175,8 +326,8 @@ export default function ManageAgents() {
   const handleStatusFilter = (value: string) => {
     setQueryParams((prev) => ({
       ...prev,
-     agentApprovalStatus: value, 
-        page: 1,
+      agentApprovalStatus: value,
+      page: 1,
     }));
   };
 

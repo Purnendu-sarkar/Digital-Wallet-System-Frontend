@@ -43,7 +43,7 @@ export interface IUser {
   isActive: IsActive;
   isDeleted: boolean;
   isVerified: boolean;
-  agentApprovalStatus?: "PENDING" | "APPROVED" | "REJECTED";
+  agentApprovalStatus?: "PENDING" | "APPROVED" | "SUSPENDED";
   createdAt?: string;
   updatedAt?: string;
   wallet: {
