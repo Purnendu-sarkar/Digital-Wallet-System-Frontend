@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import * as React from "react";
 import { useForm } from "react-hook-form";
@@ -26,13 +27,17 @@ import { Check, ChevronsUpDown } from "lucide-react";
 import { useSearchUsersQuery } from "@/redux/features/user/userApi";
 import { useSendMoneyMutation } from "@/redux/features/transaction/transactionApi";
 
+// Form schema with refined amount to prevent leading zeros
 const formSchema = z.object({
   searchTerm: z.string().min(1, { message: "Enter phone or email to search" }),
   receiverId: z.string().min(1, { message: "Select a receiver" }),
   amount: z
     .number()
     .min(1, { message: "Amount must be at least 1" })
-    .positive(),
+    .positive()
+    .refine((val) => val.toString() === parseFloat(val.toString()).toString(), {
+      message: "Invalid amount format",
+    }),
 });
 
 export default function SendMoney() {
@@ -49,18 +54,19 @@ export default function SendMoney() {
   );
 
   const users = data?.data ?? [];
-
-  const [sendMoney, { isLoading: isSending }] = useSendMoneyMutation();
+  const [sendMoney, { isLoading: isSending, error: sendError }] =
+    useSendMoneyMutation();
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       searchTerm: "",
       receiverId: "",
-      amount: 0,
+      amount: undefined,
     },
   });
 
+  // Handle form submission
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     try {
       await sendMoney({
@@ -70,12 +76,20 @@ export default function SendMoney() {
       toast.success("Money sent successfully");
       form.reset();
       setOpen(false);
-    } catch (error) {
-      toast.error("Failed to send money");
+      setSearchTerm("");
+    } catch (error: any) {
+      const errorMessage = error?.data?.message || "Failed to send money";
+      toast.error(errorMessage);
     }
   };
 
-  console.log("users data =>", users);
+  // Handle amount input to remove leading zeros
+  const handleAmountChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    // Remove leading zeros and parse as number
+    const parsedValue = value.replace(/^0+/, "") || "0";
+    form.setValue("amount", parseFloat(parsedValue) || 0);
+  };
 
   return (
     <div className="max-w-md mx-auto p-6 bg-white rounded-lg shadow-md">
@@ -163,13 +177,13 @@ export default function SendMoney() {
             name="amount"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Amount</FormLabel>
+                <FormLabel>Amount (BDT)</FormLabel>
                 <FormControl>
                   <Input
                     type="number"
                     placeholder="Enter amount"
-                    {...field}
-                    onChange={(e) => field.onChange(Number(e.target.value))}
+                    value={field.value || ""}
+                    onChange={handleAmountChange}
                   />
                 </FormControl>
                 <FormMessage />
