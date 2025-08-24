@@ -1,3 +1,4 @@
+import Cashout from "@/pages/User/Cashout";
 import type { ISidebarItem } from "@/types";
 import { lazy } from "react";
 
@@ -36,6 +37,11 @@ export const userSidebarItems: ISidebarItem[] = [
                 title: "Send Money",
                 url: "/user/send-money",
                 component: SendMoney,
+            },
+            {
+                title: "Cash Out",
+                url: "/user/cash-out",
+                component: Cashout,
             },
             {
                 title: "Transactions",

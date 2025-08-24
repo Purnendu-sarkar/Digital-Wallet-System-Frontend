@@ -11,6 +11,18 @@ interface IUserResponse {
 interface ISingleUserResponse {
   data: IUser;
 }
+export interface ISearchUser {
+  _id: string;
+  name: string;
+  email: string;
+  phone?: string;
+}
+interface ISearchUsersResponse {
+  success: boolean;
+  statusCode: number;
+  message: string;
+  data: IUser[];
+}
 
 export const userApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
@@ -58,14 +70,22 @@ export const userApi = baseApi.injectEndpoints({
       }),
       invalidatesTags: ["USER"],
     }),
+    searchUsers: builder.query<ISearchUsersResponse, { searchTerm: string }>({
+      query: ({ searchTerm }) => ({
+        url: "/user/search",
+        params: { searchTerm },
+      }),
+      providesTags: ["USER"],
+    }),
   }),
 });
 
-export const { 
-  useGetAllUsersQuery, 
-  useGetUserByIdQuery, 
-  useBlockUserMutation, 
-  useUnblockUserMutation, 
-  useApproveAgentMutation, 
-  useSuspendAgentMutation 
+export const {
+  useGetAllUsersQuery,
+  useGetUserByIdQuery,
+  useBlockUserMutation,
+  useUnblockUserMutation,
+  useApproveAgentMutation,
+  useSuspendAgentMutation,
+  useSearchUsersQuery
 } = userApi;

@@ -25,12 +25,12 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { cn } from "@/lib/utils";
 import { Check, ChevronsUpDown } from "lucide-react";
 import { useSearchUsersQuery } from "@/redux/features/user/userApi";
-import { useSendMoneyMutation } from "@/redux/features/transaction/transactionApi";
+import { useCashOutMutation } from "@/redux/features/transaction/transactionApi";
 
 // Form schema with refined amount to prevent leading zeros
 const formSchema = z.object({
   searchTerm: z.string().min(1, { message: "Enter phone or email to search" }),
-  receiverId: z.string().min(1, { message: "Select a receiver" }),
+  agentId: z.string().min(1, { message: "Select an agent" }),
   amount: z
     .number()
     .min(1, { message: "Amount must be at least 1" })
@@ -40,7 +40,7 @@ const formSchema = z.object({
     }),
 });
 
-export default function SendMoney() {
+export default function Cashout() {
   const [searchTerm, setSearchTerm] = React.useState("");
   const [open, setOpen] = React.useState(false);
   const debouncedSearch = React.useMemo(
@@ -53,15 +53,15 @@ export default function SendMoney() {
     { skip: !searchTerm }
   );
 
-  const users = data?.data ?? [];
-  const [sendMoney, { isLoading: isSending, error: sendError }] =
-    useSendMoneyMutation();
+  const agents = data?.data ?? [];
+  const [cashOut, { isLoading: isProcessing, error: processError }] =
+    useCashOutMutation();
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       searchTerm: "",
-      receiverId: "",
+      agentId: "",
       amount: undefined,
     },
   });
@@ -69,16 +69,16 @@ export default function SendMoney() {
   // Handle form submission
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     try {
-      await sendMoney({
-        receiverId: values.receiverId,
+      await cashOut({
+        agentId: values.agentId,
         amount: values.amount,
       }).unwrap();
-      toast.success("Money sent successfully");
+      toast.success("Cash-out successful");
       form.reset();
       setOpen(false);
       setSearchTerm("");
     } catch (error: any) {
-      const errorMessage = error?.data?.message || "Failed to send money";
+      const errorMessage = error?.data?.message || "Failed to process cash-out";
       toast.error(errorMessage);
     }
   };
@@ -93,15 +93,15 @@ export default function SendMoney() {
 
   return (
     <div className="max-w-md mx-auto p-6 bg-white rounded-lg shadow-md">
-      <h2 className="text-2xl font-bold mb-6">Send Money</h2>
+      <h2 className="text-2xl font-bold mb-6">Cash Out</h2>
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
           <FormField
             control={form.control}
-            name="receiverId"
+            name="agentId"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Receiver (Search by Phone or Email)</FormLabel>
+                <FormLabel>Agent (Search by Phone or Email)</FormLabel>
                 <Popover open={open} onOpenChange={setOpen}>
                   <PopoverTrigger asChild>
                     <FormControl>
@@ -114,8 +114,8 @@ export default function SendMoney() {
                         )}
                       >
                         {field.value
-                          ? users.find((user) => user._id === field.value)?.name
-                          : "Search and select receiver"}
+                          ? agents.find((agent) => agent._id === field.value)?.name
+                          : "Search and select agent"}
                         <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
                       </Button>
                     </FormControl>
@@ -132,34 +132,34 @@ export default function SendMoney() {
                     </div>
                     {isSearching ? (
                       <Skeleton className="h-32 w-full" />
-                    ) : users.length === 0 ? (
+                    ) : agents.length === 0 ? (
                       <p className="p-2 text-center text-muted-foreground">
-                        No users found
+                        No agents found
                       </p>
                     ) : (
                       <div className="max-h-48 overflow-y-auto">
-                        {users.map((user) => (
+                        {agents.map((agent) => (
                           <div
-                            key={user._id}
+                            key={agent._id}
                             className="flex items-center p-2 cursor-pointer hover:bg-accent"
                             onClick={() => {
-                              field.onChange(user._id);
+                              field.onChange(agent._id);
                               setOpen(false);
                             }}
                           >
                             <Check
                               className={cn(
                                 "mr-2 h-4 w-4",
-                                user._id === field.value
+                                agent._id === field.value
                                   ? "opacity-100"
                                   : "opacity-0"
                               )}
                             />
                             <div>
-                              <p>{user.name}</p>
+                              <p>{agent.name}</p>
                               <p className="text-sm text-muted-foreground">
-                                {user.email}{" "}
-                                {user.phone ? `(${user.phone})` : ""}
+                                {agent.email}{" "}
+                                {agent.phone ? `(${agent.phone})` : ""}
                               </p>
                             </div>
                           </div>
@@ -190,8 +190,8 @@ export default function SendMoney() {
               </FormItem>
             )}
           />
-          <Button type="submit" className="w-full" disabled={isSending}>
-            {isSending ? "Sending..." : "Send Money"}
+          <Button type="submit" className="w-full" disabled={isProcessing}>
+            {isProcessing ? "Processing..." : "Cash Out"}
           </Button>
         </form>
       </Form>
