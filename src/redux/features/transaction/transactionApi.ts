@@ -14,6 +14,10 @@ interface ISendMoneyPayload {
   receiverId: string;
   amount: number;
 }
+interface ICashOutPayload {
+  agentId: string;
+  amount: number;
+}
 
 export const transactionApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
@@ -25,7 +29,18 @@ export const transactionApi = baseApi.injectEndpoints({
       }),
       invalidatesTags: ["TRANSACTION", "USER"],
     }),
+    cashOut: builder.mutation<ITransaction, ICashOutPayload>({
+      query: (payload) => ({
+        url: "/transaction/cash-out",
+        method: "POST",
+        data: payload,
+      }),
+      invalidatesTags: ["TRANSACTION", "USER"],
+    }),
   }),
 });
 
-export const { useSendMoneyMutation } = transactionApi;
+export const {
+  useSendMoneyMutation,
+  useCashOutMutation
+} = transactionApi;
