@@ -14,8 +14,9 @@ interface ISendMoneyPayload {
   receiverId: string;
   amount: number;
 }
-interface ICashOutPayload {
-  agentId: string;
+
+interface ICashInOutPayload {
+  userId: string;
   amount: number;
 }
 
@@ -29,9 +30,18 @@ export const transactionApi = baseApi.injectEndpoints({
       }),
       invalidatesTags: ["TRANSACTION", "USER"],
     }),
-    cashOut: builder.mutation<ITransaction, ICashOutPayload>({
+    cashOut: builder.mutation<ITransaction, ICashInOutPayload>({
       query: (payload) => ({
         url: "/transaction/cash-out",
+        method: "POST",
+        data: payload,
+      }),
+      invalidatesTags: ["TRANSACTION", "USER"],
+    }),
+
+    cashIn: builder.mutation<ITransaction, ICashInOutPayload>({
+      query: (payload) => ({
+        url: "/transaction/cash-in",
         method: "POST",
         data: payload,
       }),
@@ -42,5 +52,6 @@ export const transactionApi = baseApi.injectEndpoints({
 
 export const {
   useSendMoneyMutation,
-  useCashOutMutation
+  useCashOutMutation,
+  useCashInMutation,
 } = transactionApi;
