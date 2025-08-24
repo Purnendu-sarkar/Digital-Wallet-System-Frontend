@@ -60,13 +60,13 @@ export const transactionApi = baseApi.injectEndpoints({
       invalidatesTags: ["TRANSACTION", "USER"],
     }),
     getAllTransactions: builder.query<ITransactionResponse, Record<string, string | number | undefined>>({
-      query: (payload) => ({
-        url: "/transaction/history",
-        method: "GET",
-        data: payload,
-      }),
-      providesTags: ["TRANSACTION"],
-    }),
+  query: (queryParams) => ({
+    url: "/transaction/history",
+    method: "GET",
+    params: queryParams,
+  }),
+  providesTags: ["TRANSACTION"],
+}),
   }),
 });
 
