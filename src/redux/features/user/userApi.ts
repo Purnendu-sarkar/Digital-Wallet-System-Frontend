@@ -17,7 +17,22 @@ export const userApi = baseApi.injectEndpoints({
       }),
       providesTags: ["USER"],
     }),
+
+    blockUser: builder.mutation<IUser, string>({
+      query: (userId) => ({
+        url: `/admin/wallets/block/${userId}`,
+        method: "PATCH",
+      }),
+      invalidatesTags: ["USER"],
+    }),
+    unblockUser: builder.mutation<IUser, string>({
+      query: (userId) => ({
+        url: `/admin/wallets/unblock/${userId}`,
+        method: "PATCH",
+      }),
+      invalidatesTags: ["USER"],
+    }),
   }),
 });
 
-export const { useGetAllUsersQuery } = userApi;
+export const { useGetAllUsersQuery, useBlockUserMutation, useUnblockUserMutation } = userApi;

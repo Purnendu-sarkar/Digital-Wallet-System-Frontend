@@ -28,15 +28,28 @@ export interface IMeta {
   totalPage: number;
 }
 
+export interface IsActive {
+  ACTIVE: "ACTIVE";
+  INACTIVE: "INACTIVE";
+  BLOCKED: "BLOCKED";
+}
+
 export interface IUser {
   _id: string;
   name: string;
   email: string;
+  password?: string;
+  phone?: string;
+  picture?: string;
+  address?: string;
   role: TRole;
-  isActive: boolean;
+  isActive: IsActive;
   isDeleted: boolean;
   isVerified: boolean;
   agentApprovalStatus?: "PENDING" | "APPROVED" | "REJECTED";
   createdAt?: string;
   updatedAt?: string;
+  wallet: {
+    isBlocked: boolean;
+  };
 }

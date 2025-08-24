@@ -1,5 +1,11 @@
+/* eslint-disable react-hooks/rules-of-hooks */
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import * as React from "react";
-import { useGetAllUsersQuery } from "@/redux/features/user/userApi";
+import {
+  useBlockUserMutation,
+  useGetAllUsersQuery,
+  useUnblockUserMutation,
+} from "@/redux/features/user/userApi";
 import { Input } from "@/components/ui/input";
 import {
   Select,
@@ -18,6 +24,19 @@ import type {
 import { role } from "@/context/constants/role";
 import type { IUser } from "@/types";
 import { DataTable } from "@/components/ui/data-table";
+import { Button } from "@/components/ui/button";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
+import { toast } from "sonner";
 
 const columns: ColumnDef<IUser>[] = [
   {
@@ -37,6 +56,90 @@ const columns: ColumnDef<IUser>[] = [
     header: "Active",
     cell: ({ row }) => (row.original.isActive ? "Yes" : "No"),
   },
+  {
+  id: "actions",
+  header: "Actions",
+  cell: ({ row }) => {
+    const user = row.original;
+    const [blockUser, { isLoading: isBlocking }] = useBlockUserMutation();
+    const [unblockUser, { isLoading: isUnblocking }] = useUnblockUserMutation();
+
+    const handleBlock = async () => {
+      try {
+        await blockUser(user._id).unwrap();
+        toast.success("Wallet blocked successfully");
+      } catch (error) {
+        toast.error("Failed to block wallet");
+      }
+    };
+
+    const handleUnblock = async () => {
+      try {
+        await unblockUser(user._id).unwrap();
+        toast.success("Wallet unblocked successfully");
+      } catch (error) {
+        toast.error("Failed to unblock wallet");
+      }
+    };
+
+    return user.wallet?.isBlocked ? (
+      <AlertDialog>
+        <AlertDialogTrigger asChild>
+          <Button
+            variant="outline"
+            size="sm"
+            disabled={isUnblocking}
+            className="text-green-600"
+          >
+            Unblock
+          </Button>
+        </AlertDialogTrigger>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Are you sure?</AlertDialogTitle>
+            <AlertDialogDescription>
+              This will unblock the user's wallet.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction onClick={handleUnblock} disabled={isUnblocking}>
+              Unblock
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+    ) : (
+      <AlertDialog>
+        <AlertDialogTrigger asChild>
+          <Button
+            variant="outline"
+            size="sm"
+            disabled={isBlocking}
+            className="text-red-600"
+          >
+            Block
+          </Button>
+        </AlertDialogTrigger>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Are you sure?</AlertDialogTitle>
+            <AlertDialogDescription>
+              This will block the user's wallet.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction onClick={handleBlock} disabled={isBlocking}>
+              Block
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+    );
+  },
+}
+
 ];
 
 export default function ManageUsers() {
