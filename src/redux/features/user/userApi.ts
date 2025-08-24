@@ -8,12 +8,24 @@ interface IUserResponse {
   meta: IMeta;
 }
 
+interface ISingleUserResponse {
+  data: IUser;
+}
+
 export const userApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
     getAllUsers: builder.query<IUserResponse, Record<string, string | number | undefined>>({
       query: (queryParams) => ({
         url: "/user/all-users",
         params: queryParams,
+      }),
+      providesTags: ["USER"],
+    }),
+
+    getUserById: builder.query<ISingleUserResponse, string>({
+      query: (userId) => ({
+        url: `/user/${userId}`,
+        method: "GET",
       }),
       providesTags: ["USER"],
     }),
@@ -35,4 +47,4 @@ export const userApi = baseApi.injectEndpoints({
   }),
 });
 
-export const { useGetAllUsersQuery, useBlockUserMutation, useUnblockUserMutation } = userApi;
+export const { useGetAllUsersQuery, useGetUserByIdQuery, useBlockUserMutation, useUnblockUserMutation } = userApi;

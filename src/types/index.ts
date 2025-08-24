@@ -28,11 +28,8 @@ export interface IMeta {
   totalPage: number;
 }
 
-export interface IsActive {
-  ACTIVE: "ACTIVE";
-  INACTIVE: "INACTIVE";
-  BLOCKED: "BLOCKED";
-}
+export type IsActive = "ACTIVE" | "INACTIVE" | "BLOCKED";
+
 
 export interface IUser {
   _id: string;
@@ -50,6 +47,11 @@ export interface IUser {
   createdAt?: string;
   updatedAt?: string;
   wallet: {
+    balance: number;
     isBlocked: boolean;
   };
+  auths?: {
+    provider: string;
+    providerId: string;
+  }[];
 }
