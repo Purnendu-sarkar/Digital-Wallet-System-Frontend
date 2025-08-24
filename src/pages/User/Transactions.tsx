@@ -10,11 +10,7 @@ import {
 } from "@/components/ui/select";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import type {
-  ColumnDef,
-  PaginationState,
-  Updater,
-} from "@tanstack/react-table";
+import type { ColumnDef, PaginationState, Updater } from "@tanstack/react-table";
 import type { ITransaction } from "@/redux/features/transaction/transactionApi";
 import { DataTable } from "@/components/ui/data-table";
 import DatePicker from "react-datepicker";
@@ -248,7 +244,7 @@ export default function UserTransactions() {
           </div>
           <Select
             onValueChange={handleLimitChange}
-            value={queryParams.limit.toString()}
+            value={queryParams.limit?.toString()}
           >
             <SelectTrigger className="w-[120px]">
               <SelectValue placeholder="Rows per page" />

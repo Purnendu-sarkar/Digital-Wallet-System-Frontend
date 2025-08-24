@@ -1,5 +1,4 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import * as React from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -54,7 +53,7 @@ export default function SendMoney() {
   );
 
   const users = data?.data ?? [];
-  const [sendMoney, { isLoading: isSending, error: sendError }] =
+  const [sendMoney, { isLoading: isSending }] =
     useSendMoneyMutation();
 
   const form = useForm<z.infer<typeof formSchema>>({
