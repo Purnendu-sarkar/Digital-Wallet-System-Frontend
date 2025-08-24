@@ -20,6 +20,18 @@ interface ICashInOutPayload {
   amount: number;
 }
 
+interface ITransactionResponse {
+  data: ITransaction[];
+  meta: {
+    page: number;
+    limit: number;
+    total: number;
+    totalPage: number;
+    totalTransactions: number;
+    totalCommission?: number;
+  };
+}
+
 export const transactionApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
     sendMoney: builder.mutation<ITransaction, ISendMoneyPayload>({
@@ -47,6 +59,14 @@ export const transactionApi = baseApi.injectEndpoints({
       }),
       invalidatesTags: ["TRANSACTION", "USER"],
     }),
+    getAllTransactions: builder.query<ITransactionResponse, Record<string, string | number | undefined>>({
+      query: (payload) => ({
+        url: "/transaction/history",
+        method: "GET",
+        data: payload,
+      }),
+      providesTags: ["TRANSACTION"],
+    }),
   }),
 });
 
@@ -54,4 +74,5 @@ export const {
   useSendMoneyMutation,
   useCashOutMutation,
   useCashInMutation,
+  useGetAllTransactionsQuery,
 } = transactionApi;
