@@ -16,6 +16,7 @@ import { agentSidebarItems } from "./agentSidebarItems";
 import { adminSidebarItems } from "./adminSidebarItems";
 import Unauthorized from "@/pages/Unauthorized";
 import Contact from "@/pages/Contact";
+import FAQ from "@/pages/FAQ";
 
 export const router = createBrowserRouter([
   {
@@ -29,6 +30,10 @@ export const router = createBrowserRouter([
       {
         Component: Contact,
         path: "contact",
+      },
+      {
+        Component: FAQ,
+        path: "faq",
       },
       // {
       //   Component: UserDashboard,
