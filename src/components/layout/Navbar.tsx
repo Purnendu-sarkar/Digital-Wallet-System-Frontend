@@ -23,7 +23,7 @@ const navigationLinks = [
   { href: "/", label: "Home" },
   { href: "/about", label: "About" },
   { href: "/", label: "Features" },
-  { href: "/", label: "Pricing" },
+  { href: "/contact", label: "Contact" },
 ];
 
 export default function Navbar() {

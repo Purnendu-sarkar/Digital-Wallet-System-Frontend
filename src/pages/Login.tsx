@@ -1,4 +1,4 @@
-import DigitalLogin from "@/assets/Image/LogIN.png";
+import DigitalLogin from "@/assets/images/LogIN.png";
 import { Link } from "react-router-dom";
 import { LoginForm } from "@/components/modules/Authentication/LoginForm";
 import Logo from "@/assets/icons/digital-wallet.png";

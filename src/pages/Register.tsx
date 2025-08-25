@@ -1,4 +1,4 @@
-import DigitalRegister from "@/assets/Image/LogIN.png";
+import DigitalRegister from "@/assets/images/LogIN.png";
 import { Link } from "react-router-dom";
 import { RegisterForm } from "@/components/modules/Authentication/RegisterForm";
 import Logo from "@/assets/icons/digital-wallet.png";
