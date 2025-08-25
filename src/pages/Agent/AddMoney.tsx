@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import * as React from "react";
 import { useForm } from "react-hook-form";
@@ -54,7 +53,7 @@ export default function AddMoney() {
   );
 
   const users = data?.data ?? [];
-  const [cashIn, { isLoading: isProcessing, error: cashInError }] =
+  const [cashIn, { isLoading: isProcessing }] =
     useCashInMutation();
 
   const form = useForm<z.infer<typeof formSchema>>({

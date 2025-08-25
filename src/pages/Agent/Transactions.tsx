@@ -239,7 +239,7 @@ export default function Transactions() {
           </div>
           <Select
             onValueChange={handleLimitChange}
-            value={queryParams.limit.toString()}
+            value={queryParams.limit?.toString()}
           >
             <SelectTrigger className="w-[120px]">
               <SelectValue placeholder="Rows per page" />

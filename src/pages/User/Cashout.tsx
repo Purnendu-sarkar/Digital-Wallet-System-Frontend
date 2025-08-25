@@ -1,5 +1,4 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import * as React from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -26,6 +25,9 @@ import { cn } from "@/lib/utils";
 import { Check, ChevronsUpDown } from "lucide-react";
 import { useSearchUsersQuery } from "@/redux/features/user/userApi";
 import { useCashOutMutation } from "@/redux/features/transaction/transactionApi";
+
+
+
 
 // Form schema with refined amount to prevent leading zeros
 const formSchema = z.object({
@@ -54,7 +56,7 @@ export default function Cashout() {
   );
 
   const agents = data?.data ?? [];
-  const [cashOut, { isLoading: isProcessing, error: processError }] =
+  const [cashOut, { isLoading: isProcessing }] =
     useCashOutMutation();
 
   const form = useForm<z.infer<typeof formSchema>>({
