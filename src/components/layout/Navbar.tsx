@@ -18,17 +18,20 @@ import { Link } from "react-router";
 import { useUserInfoQuery } from "@/redux/features/auth/auth.api";
 import UserMenu from "../user-menu";
 
-// Navigation links array to be used in both desktop and mobile menus
-const navigationLinks = [
-  { href: "/", label: "Home" },
-  { href: "/about", label: "About" },
-  { href: "/", label: "Features" },
-  { href: "/contact", label: "Contact" },
-  { href: "/faq", label: "FAQ" },
-];
-
 export default function Navbar() {
   const { data: user } = useUserInfoQuery(null);
+
+  // Navigation links array to be used in both desktop and mobile menus
+  const navigationLinks = [
+    { href: "/", label: "Home" },
+    { href: "/about", label: "About" },
+    { href: "/features", label: "Features" },
+    { href: "/contact", label: "Contact" },
+    { href: "/faq", label: "FAQ" },
+    ...(user?.data
+      ? [{ href: `/${user.data.role}/overview`, label: "Dashboard" }]
+      : []),
+  ];
 
   return (
     <header className="border-b">
@@ -118,7 +121,7 @@ export default function Navbar() {
           </div>
           {/* User menu */}
           {user?.data ? (
-            <UserMenu user={user.data} /> 
+            <UserMenu user={user.data} />
           ) : (
             <Link to="/login">
               <Button variant="outline">Login</Button>
