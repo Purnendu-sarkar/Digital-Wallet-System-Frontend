@@ -19,7 +19,7 @@ import { useUserInfoQuery } from "@/redux/features/auth/auth.api";
 import UserMenu from "../user-menu";
 
 export default function Navbar() {
-  const { data: user } = useUserInfoQuery(null);
+  const { data: user } = useUserInfoQuery();
 
   // Navigation links array to be used in both desktop and mobile menus
   const navigationLinks = [

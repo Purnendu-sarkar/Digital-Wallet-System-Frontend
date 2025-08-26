@@ -33,7 +33,7 @@ const teamMembers = [
 ];
 
 export default function About() {
-  const { data: user } = useUserInfoQuery(null);
+  const { data: user } = useUserInfoQuery();
   // Animation variants for smooth transitions
   const containerVariants = {
     hidden: { opacity: 0, y: 20 },

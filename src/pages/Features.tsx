@@ -42,7 +42,7 @@ const fallbackFeatures = [
 ];
 
 export default function Features() {
-  const { data: user, isLoading: isUserLoading } = useUserInfoQuery(null);
+  const { data: user, isLoading: isUserLoading } = useUserInfoQuery();
 
   const { data: transactionData, isLoading: isTransactionLoading, isError } = useGetAllTransactionsQuery({
     page: 1,
