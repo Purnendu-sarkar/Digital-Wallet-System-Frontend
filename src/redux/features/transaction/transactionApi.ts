@@ -16,6 +16,7 @@ export interface ITransaction {
   agent?: IUser;
   amount: number;
   fee?: number;
+  commission?: number;
   type: "SEND_MONEY" | "TOP_UP" | "CASH_IN" | "CASH_OUT" | "WITHDRAW";
   status: "PENDING" | "SUCCESS" | "FAILED";
   createdAt: string;
@@ -37,7 +38,15 @@ interface ICashInPayload {
   amount: number;
 }
 
-
+export interface IAgentOverview {
+  summary: {
+    totalCashIn: number;
+    totalCashOut: number;
+    totalCommission: number;
+    totalTransactions: number;
+  };
+  recentActivities: ITransaction[];
+}
 
 
 interface ITransactionResponse {
@@ -117,6 +126,24 @@ export const transactionApi = baseApi.injectEndpoints({
       }),
       providesTags: ["TRANSACTION"],
     }),
+
+    getAgentOverview: builder.query<IAgentOverview, IStatsQueryParams>({
+      query: (params) => ({
+        url: "/transaction/agent-overview",
+        method: "GET",
+        params,
+      }),
+      transformResponse: (response: { data: IAgentOverview }) => response.data,
+      providesTags: ["TRANSACTION"],
+      onQueryStarted: async (arg, { queryFulfilled }) => {
+        try {
+          const { data: stats } = await queryFulfilled;
+          console.log("Admin Stats Loaded:", stats);
+        } catch (error) {
+          console.error("Error loading admin stats:", error);
+        }
+      },
+    }),
   }),
 });
 
@@ -126,4 +153,5 @@ export const {
   useCashOutMutation,
   useCashInMutation,
   useGetAllTransactionsQuery,
+  useGetAgentOverviewQuery,
 } = transactionApi;
