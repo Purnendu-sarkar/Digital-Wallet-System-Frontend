@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { baseApi } from "@/redux/baseApi";
 import type { IResponse, ISendOtp, IVerifyOtp } from "@/types";
 
@@ -40,7 +41,7 @@ export const authApi = baseApi.injectEndpoints({
       }),
       invalidatesTags: ["USER"],
     }),
-    userInfo: builder.query({
+    userInfo: builder.query<IResponse<any>, void>({
       query: () => ({
         url: "/user/me",
         method: "GET",
