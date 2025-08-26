@@ -16,6 +16,7 @@ export interface ITransaction {
   agent?: IUser;
   amount: number;
   fee?: number;
+  type: "SEND_MONEY" | "TOP_UP" | "CASH_IN" | "CASH_OUT" | "WITHDRAW";
   status: "PENDING" | "SUCCESS" | "FAILED";
   createdAt: string;
   updatedAt: string;

@@ -53,8 +53,7 @@ export default function SendMoney() {
   );
 
   const users = data?.data ?? [];
-  const [sendMoney, { isLoading: isSending }] =
-    useSendMoneyMutation();
+  const [sendMoney, { isLoading: isSending }] = useSendMoneyMutation();
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -91,7 +90,7 @@ export default function SendMoney() {
   };
 
   return (
-    <div className="max-w-md mx-auto p-6 bg-white rounded-lg shadow-md">
+    <div className="max-w-md mx-auto p-6 bg-background rounded-lg shadow-[0_4px_6px_-1px_var(--border)]">
       <h2 className="text-2xl font-bold mb-6">Send Money</h2>
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">

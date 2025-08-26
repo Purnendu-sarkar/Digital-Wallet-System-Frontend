@@ -26,9 +26,6 @@ import { Check, ChevronsUpDown } from "lucide-react";
 import { useSearchUsersQuery } from "@/redux/features/user/userApi";
 import { useCashOutMutation } from "@/redux/features/transaction/transactionApi";
 
-
-
-
 // Form schema with refined amount to prevent leading zeros
 const formSchema = z.object({
   searchTerm: z.string().min(1, { message: "Enter phone or email to search" }),
@@ -56,8 +53,7 @@ export default function Cashout() {
   );
 
   const agents = data?.data ?? [];
-  const [cashOut, { isLoading: isProcessing }] =
-    useCashOutMutation();
+  const [cashOut, { isLoading: isProcessing }] = useCashOutMutation();
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -94,7 +90,7 @@ export default function Cashout() {
   };
 
   return (
-    <div className="max-w-md mx-auto p-6 bg-white rounded-lg shadow-md">
+    <div className="max-w-md mx-auto p-6 bg-background rounded-lg shadow-[0_4px_6px_-1px_var(--border)]">
       <h2 className="text-2xl font-bold mb-6">Cash Out</h2>
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
@@ -116,7 +112,8 @@ export default function Cashout() {
                         )}
                       >
                         {field.value
-                          ? agents.find((agent) => agent._id === field.value)?.name
+                          ? agents.find((agent) => agent._id === field.value)
+                              ?.name
                           : "Search and select agent"}
                         <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
                       </Button>
