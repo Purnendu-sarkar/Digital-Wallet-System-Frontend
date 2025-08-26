@@ -57,6 +57,7 @@ export default function AdminOverview() {
     };
 
     if (filterType === "custom") {
+      if (!startDate || !endDate) return undefined;
       return {
         ...base,
         startDate: startDate ? format(startDate, "yyyy-MM-dd") : undefined,
@@ -65,6 +66,7 @@ export default function AdminOverview() {
     }
 
     if (filterType === "specificDate" && startDate) {
+      if (!startDate) return undefined;
       return {
         ...base,
         specificDate: format(startDate, "yyyy-MM-dd"),
@@ -78,7 +80,12 @@ export default function AdminOverview() {
     data: stats,
     isLoading: statsLoading,
     error: statsError,
-  } = useGetAdminStatsQuery(params);
+  } = useGetAdminStatsQuery(params, {
+    skip:
+      (filterType === "custom" && (!startDate || !endDate)) ||
+      (filterType === "specificDate" && !startDate),
+  });
+
   const { data: transactionsData, isLoading: txLoading } =
     useGetAllTransactionsQuery({});
 
@@ -229,6 +236,7 @@ export default function AdminOverview() {
       </div>
 
       {/* Cards */}
+
       {statsLoading ? (
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           {[...Array(3)].map((_, i) => (

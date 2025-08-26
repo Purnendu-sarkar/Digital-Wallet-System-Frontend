@@ -74,14 +74,14 @@ export const transactionApi = baseApi.injectEndpoints({
       }),
       transformResponse: (response: { data: IAdminStats }) => response.data,
       providesTags: ["ADMIN_STATS"],
-      onQueryStarted: async (arg, { queryFulfilled }) => {
-        try {
-          const { data: stats } = await queryFulfilled;
-          console.log("Admin Stats Loaded:", stats);
-        } catch (error) {
-          console.error("Error loading admin stats:", error);
-        }
-      },
+      // onQueryStarted: async (arg, { queryFulfilled }) => {
+      //   try {
+      //     const { data: stats } = await queryFulfilled;
+      //     console.log("Admin Stats Loaded:", stats);
+      //   } catch (error) {
+      //     console.error("Error loading admin stats:", error);
+      //   }
+      // },
     }),
     sendMoney: builder.mutation<ITransaction, ISendMoneyPayload>({
       query: (payload) => ({
@@ -109,13 +109,13 @@ export const transactionApi = baseApi.injectEndpoints({
       invalidatesTags: ["TRANSACTION", "USER"],
     }),
     getAllTransactions: builder.query<ITransactionResponse, Record<string, string | number | undefined>>({
-  query: (queryParams) => ({
-    url: "/transaction/history",
-    method: "GET",
-    params: queryParams,
-  }),
-  providesTags: ["TRANSACTION"],
-}),
+      query: (queryParams) => ({
+        url: "/transaction/history",
+        method: "GET",
+        params: queryParams,
+      }),
+      providesTags: ["TRANSACTION"],
+    }),
   }),
 });
 
