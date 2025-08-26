@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useUserInfoQuery } from "@/redux/features/auth/auth.api";
 import { useGetAllTransactionsQuery, type ITransaction } from "@/redux/features/transaction/transactionApi";
 import {
@@ -11,6 +12,10 @@ import { format } from "date-fns";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Separator } from "@/components/ui/separator";
 import { ArrowDown, ArrowUp, Send, ArrowUpCircle, ArrowDownCircle, type LucideIcon } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import QuickSendMoney from "./QuickSendMoney"; 
+import QuickCashOut from "./QuickCashOut"; 
+import * as React from "react"; 
 
 export default function Overview() {
   const { data: userData, isLoading: userLoading, error: userError } = useUserInfoQuery();
@@ -21,9 +26,35 @@ export default function Overview() {
   });
 
   const balance = userData?.data?.wallet?.balance || 0;
-  const transactions = transactionsData?.data || [];
+  let transactions = transactionsData?.data || [];
   const currentUserId = userData?.data?._id;
 
+  transactions = [...transactions].sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+
+  // Recent Send Money Receivers 
+  const recentReceivers = Array.from(
+    transactions
+      .filter((tx) => tx.type === "SEND_MONEY" && tx.sender?._id === currentUserId)
+      .reduce((map, tx) => {
+        if (tx.receiver && !map.has(tx.receiver._id)) map.set(tx.receiver._id, tx.receiver);
+        return map;
+      }, new Map<string, any>())
+      .values()
+  ).slice(0, 5);
+
+  // Recent Cash Out Agents
+  const recentAgents = Array.from(
+    transactions
+      .filter((tx) => tx.type === "CASH_OUT" && tx.sender?._id === currentUserId)
+      .reduce((map, tx) => {
+        if (tx.agent && !map.has(tx.agent._id)) map.set(tx.agent._id, tx.agent);
+        return map;
+      }, new Map<string, any>())
+      .values()
+  ).slice(0, 5);
+
+  const [sendOpen, setSendOpen] = React.useState(false);
+  const [cashOutOpen, setCashOutOpen] = React.useState(false);
 
   if (userLoading || txLoading) {
     return (
@@ -137,6 +168,23 @@ export default function Overview() {
           <p className="text-3xl font-bold text-green-600">৳ {balance.toFixed(2)}</p> 
         </CardContent>
       </Card>
+
+      {/* Quick Actions Card */}
+      <Card className="w-full max-w-md mx-auto shadow-md">
+        <CardHeader>
+          <CardTitle className="text-xl font-semibold">Quick Actions</CardTitle>
+        </CardHeader>
+        <CardContent className="flex justify-around">
+          <Button onClick={() => setSendOpen(true)}>Quick Send Money</Button>
+          <Button onClick={() => setCashOutOpen(true)}>Quick Cash Out</Button>
+        </CardContent>
+      </Card>
+
+      {/* Quick Send Money Dialog */}
+      <QuickSendMoney open={sendOpen} onOpenChange={setSendOpen} recentReceivers={recentReceivers} />
+
+      {/* Quick Cash Out Dialog */}
+      <QuickCashOut open={cashOutOpen} onOpenChange={setCashOutOpen} recentAgents={recentAgents} />
 
       {/* Recent Transactions Card */}
       <Card className="w-full shadow-md">
