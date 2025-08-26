@@ -33,9 +33,11 @@ import {
   ArrowUpCircle,
   ArrowDownCircle,
   List,
+  Wallet, // নতুন আইকন ইম্পোর্ট
 } from "lucide-react";
 import { useGetAgentOverviewQuery } from "@/redux/features/transaction/transactionApi";
 import { Separator } from "@radix-ui/react-select";
+import { useUserInfoQuery } from "@/redux/features/auth/auth.api";
 
 const onboardingSteps = [
   {
@@ -47,7 +49,7 @@ const onboardingSteps = [
   {
     title: "Stats Cards",
     content:
-      "These cards show a quick summary of your total cash-in, cash-out, commissions, and transactions.",
+      "These cards show a quick summary of your total cash-in, cash-out, commissions, transactions, and wallet balance.",
     target: ".stats-cards",
   },
   {
@@ -71,6 +73,14 @@ const onboardingSteps = [
 ];
 
 const Overview = () => {
+  const {
+    data: userData,
+    isLoading: userLoading,
+    error: userError,
+  } = useUserInfoQuery();
+  const balance = userData?.data?.wallet?.balance || 0;
+  console.log("User Balance:", balance);
+
   const [filterType, setFilterType] = useState<
     "lifetime" | "last7days" | "last30days"
   >("lifetime");
@@ -83,8 +93,8 @@ const Overview = () => {
   const [isOnboardingOpen, setIsOnboardingOpen] = useState(!hasSeenOnboarding);
 
   // Handle error with Sonner toast
-  if (error) {
-    toast.error("Failed to load overview data. Please try again.");
+  if (error || userError) {
+    toast.error("Failed to load overview or balance data. Please try again.");
   }
 
   // Handle filter change with toast
@@ -119,7 +129,6 @@ const Overview = () => {
         { name: "Cash Out", value: data.summary.totalCashOut, fill: "#FF6384" },
       ]
     : [];
-  console.log("Overview Data:", data);
 
   return (
     <div className="container mx-auto p-4 space-y-6">
@@ -173,15 +182,29 @@ const Overview = () => {
       </div>
 
       {/* Stats Cards */}
-      <div className="stats-cards grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        {isLoading ? (
+      <div className="stats-cards grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
+        {isLoading || userLoading ? (
           <>
-            {[...Array(4)].map((_, i) => (
-              <Skeleton key={i} className="h-32 w-full" />
-            ))}
+            {[...Array(5)].map(
+              (
+                _,
+                i
+              ) => (
+                <Skeleton key={i} className="h-32 w-full" />
+              )
+            )}
           </>
         ) : (
           <>
+            <Card>
+              <CardHeader className="flex flex-row items-center justify-between">
+                <CardTitle>Wallet Balance</CardTitle>
+                <Wallet className="w-5 h-5 text-green-500" />
+              </CardHeader>
+              <CardContent>
+                <p className="text-2xl font-bold">৳ {balance.toFixed(2)} BDT</p>
+              </CardContent>
+            </Card>
             <Card>
               <CardHeader className="flex flex-row items-center justify-between">
                 <CardTitle>Total Cash In</CardTitle>
@@ -211,7 +234,7 @@ const Overview = () => {
               </CardHeader>
               <CardContent>
                 <p className="text-2xl font-bold">
-                  {data?.summary.totalCommission || 0} BDT
+                  {data?.summary.totalCommission.toFixed(2) || 0} BDT
                 </p>
               </CardContent>
             </Card>
