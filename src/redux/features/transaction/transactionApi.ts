@@ -51,8 +51,38 @@ interface ITransactionResponse {
   };
 }
 
+interface IAdminStats {
+  totalUsers: number;
+  totalAgents: number;
+  transactionCount: number;
+  totalTransactionVolume: number;
+}
+
+export interface IStatsQueryParams {
+  filterType?: "lifetime" | "last7days" | "last30days" | "custom" | "specificDate";
+  startDate?: string;
+  endDate?: string;
+}
+
 export const transactionApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
+    getAdminStats: builder.query<IAdminStats, IStatsQueryParams | void>({
+      query: (params) => ({
+        url: "/admin/stats",
+        method: "GET",
+        params,
+      }),
+      transformResponse: (response: { data: IAdminStats }) => response.data,
+      providesTags: ["ADMIN_STATS"],
+      onQueryStarted: async (arg, { queryFulfilled }) => {
+        try {
+          const { data: stats } = await queryFulfilled;
+          console.log("Admin Stats Loaded:", stats);
+        } catch (error) {
+          console.error("Error loading admin stats:", error);
+        }
+      },
+    }),
     sendMoney: builder.mutation<ITransaction, ISendMoneyPayload>({
       query: (payload) => ({
         url: "/transaction/send-money",
@@ -90,6 +120,7 @@ export const transactionApi = baseApi.injectEndpoints({
 });
 
 export const {
+  useGetAdminStatsQuery,
   useSendMoneyMutation,
   useCashOutMutation,
   useCashInMutation,
