@@ -179,42 +179,36 @@ export default function AdminOverview() {
         </Select>
 
         {filterType === "custom" && (
-          <>
-            <Popover>
-              <PopoverTrigger asChild>
-                <Button
-                  variant="outline"
-                  className="border-border hover:bg-accent hover:text-accent-foreground"
-                >
-                  <CalendarIcon className="mr-2 h-4 w-4" />
-                  Start: {startDate ? format(startDate, "PPP") : "Pick"}
-                </Button>
-              </PopoverTrigger>
-              <PopoverContent>
-                <Calendar
-                  mode="single"
-                  selected={startDate}
-                  onSelect={setStartDate}
-                />
-              </PopoverContent>
-            </Popover>
-            <Popover>
-              <PopoverTrigger asChild>
-                <Button variant="outline">
-                  <CalendarIcon className="mr-2 h-4 w-4" />
-                  End: {endDate ? format(endDate, "PPP") : "Pick"}
-                </Button>
-              </PopoverTrigger>
-              <PopoverContent>
-                <Calendar
-                  mode="single"
-                  selected={endDate}
-                  onSelect={setEndDate}
-                />
-              </PopoverContent>
-            </Popover>
-          </>
+          <Popover>
+            <PopoverTrigger asChild>
+              <Button
+                variant="outline"
+                className="border-border hover:bg-accent hover:text-accent-foreground"
+              >
+                <CalendarIcon className="mr-2 h-4 w-4" />
+                {startDate && endDate
+                  ? `${format(startDate, "PPP")} - ${format(endDate, "PPP")}`
+                  : "Pick Date Range"}
+              </Button>
+            </PopoverTrigger>
+            <PopoverContent>
+              <Calendar
+                mode="range"
+                selected={
+                  startDate && endDate
+                    ? { from: startDate, to: endDate }
+                    : undefined
+                }
+                onSelect={(range) => {
+                  if (range?.from) setStartDate(range.from);
+                  if (range?.to) setEndDate(range.to);
+                }}
+                numberOfMonths={1}
+              />
+            </PopoverContent>
+          </Popover>
         )}
+
         {filterType === "specificDate" && (
           <Popover>
             <PopoverTrigger asChild>
