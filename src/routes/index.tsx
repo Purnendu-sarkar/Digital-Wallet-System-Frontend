@@ -18,12 +18,17 @@ import Unauthorized from "@/pages/Unauthorized";
 import Contact from "@/pages/Contact";
 import FAQ from "@/pages/FAQ";
 import Features from "@/pages/Features";
+import HomePage from "@/pages/HomePage";
 
 export const router = createBrowserRouter([
   {
     Component: App,
     path: "/",
     children: [
+      {
+        Component: HomePage,
+        index: true
+      },
       {
         Component: About,
         path: "about",
