@@ -20,6 +20,8 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { authApi, useLogoutMutation } from "@/redux/features/auth/auth.api";
 import { useAppDispatch } from "@/redux/hook";
+import { useNavigate } from "react-router";
+import { toast } from "sonner";
 
 interface IUser {
   _id: string;
@@ -32,10 +34,22 @@ interface IUser {
 export default function UserMenu({ user }: { user: IUser }) {
   const [logout] = useLogoutMutation();
   const dispatch = useAppDispatch();
+  const navigate = useNavigate();
 
   const handleLogout = async () => {
-    await logout(undefined);
-    dispatch(authApi.util.resetApiState());
+    try {
+      await logout(undefined).unwrap();
+      dispatch(authApi.util.resetApiState());
+      navigate("/login", { replace: true });
+      toast.success("Logged out successfully");
+
+      setTimeout(() => {
+        window.location.reload();
+      }, 1);
+    } catch (err) {
+      console.error("Logout error:", err);
+      toast.error("Logout failed");
+    }
   };
 
   return (
