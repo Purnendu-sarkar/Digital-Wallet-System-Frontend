@@ -135,14 +135,14 @@ export const transactionApi = baseApi.injectEndpoints({
       }),
       transformResponse: (response: { data: IAgentOverview }) => response.data,
       providesTags: ["TRANSACTION"],
-      onQueryStarted: async (arg, { queryFulfilled }) => {
-        try {
-          const { data: stats } = await queryFulfilled;
-          console.log("Admin Stats Loaded:", stats);
-        } catch (error) {
-          console.error("Error loading admin stats:", error);
-        }
-      },
+      // onQueryStarted: async (arg, { queryFulfilled }) => {
+      //   try {
+      //     const { data: stats } = await queryFulfilled;
+      //     console.log("Admin Stats Loaded:", stats);
+      //   } catch (error) {
+      //     console.error("Error loading admin stats:", error);
+      //   }
+      // },
     }),
   }),
 });
