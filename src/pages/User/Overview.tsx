@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { lazy } from "react";
+import { lazy, useState } from "react";
 import { useUserInfoQuery } from "@/redux/features/auth/auth.api";
 import {
   useGetAllTransactionsQuery,
@@ -17,13 +17,54 @@ import {
   ArrowUpCircle,
   ArrowDownCircle,
   type LucideIcon,
+  Settings,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { useLocalStorage } from "react-use";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogFooter,
+} from "@/components/ui/dialog";
+
 const QuickSendMoney = lazy(() => import("./QuickSendMoney"));
 const QuickCashOut = lazy(() => import("./QuickCashOut"));
 
 import * as React from "react";
 
+const onboardingSteps = [
+  {
+    title: "Navigation Menu",
+    content:
+      "Use the navigation menu to switch between sections like Overview, Transactions, and Profile.",
+    target: ".nav-menu",
+  },
+  {
+    title: "Wallet Balance",
+    content: "This card shows your current wallet balance at a glance.",
+    target: ".wallet-balance-card",
+  },
+  {
+    title: "Quick Actions",
+    content:
+      "Use these buttons for quick money transfers or cash out to agents.",
+    target: ".quick-actions-card",
+  },
+  {
+    title: "Recent Transactions",
+    content:
+      "Here you can see your latest transactions with details, amounts, and dates.",
+    target: ".recent-transactions-card",
+  },
+  {
+    title: "Theme Toggle",
+    content:
+      "Switch between light and dark mode for a comfortable viewing experience.",
+    target: ".theme-toggle",
+  },
+];
 
 export default function Overview() {
   const {
@@ -78,6 +119,30 @@ export default function Overview() {
 
   const [sendOpen, setSendOpen] = React.useState(false);
   const [cashOutOpen, setCashOutOpen] = React.useState(false);
+
+  const [hasSeenOnboarding, setHasSeenOnboarding] = useLocalStorage(
+    "userOverviewOnboarding",
+    false
+  );
+  const [onboardingStep, setOnboardingStep] = useState(0);
+  const [isOnboardingOpen, setIsOnboardingOpen] = useState(!hasSeenOnboarding);
+
+  const nextStep = () => {
+    if (onboardingStep < onboardingSteps.length - 1) {
+      setOnboardingStep(onboardingStep + 1);
+      document
+        .querySelector(onboardingSteps[onboardingStep + 1].target)
+        ?.scrollIntoView({ behavior: "smooth" });
+    } else {
+      setIsOnboardingOpen(false);
+      setHasSeenOnboarding(true);
+    }
+  };
+
+  const skipOnboarding = () => {
+    setIsOnboardingOpen(false);
+    setHasSeenOnboarding(true);
+  };
 
   if (userLoading || txLoading) {
     return (
@@ -192,9 +257,45 @@ export default function Overview() {
 
   return (
     <div className="p-6 space-y-8">
+      {/* Onboarding Dialog */}
+      <Dialog
+        open={isOnboardingOpen}
+        onOpenChange={(open) => !open && skipOnboarding()}
+      >
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>{onboardingSteps[onboardingStep].title}</DialogTitle>
+          </DialogHeader>
+          <p>{onboardingSteps[onboardingStep].content}</p>
+          <DialogFooter>
+            <Button variant="outline" onClick={skipOnboarding}>
+              Skip
+            </Button>
+            <Button onClick={nextStep}>
+              {onboardingStep < onboardingSteps.length - 1 ? "Next" : "Finish"}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* Restart Tour Button */}
+      <div className="flex justify-end nav-menu">
+        <Button
+          variant="outline"
+          onClick={() => {
+            setIsOnboardingOpen(true);
+            setOnboardingStep(0);
+          }}
+          className="theme-toggle"
+        >
+          <Settings className="w-4 h-4 mr-2" />
+          Restart Tour
+        </Button>
+      </div>
+
       <div className="grid grid-cols-2 gap-4">
         {/* Wallet Balance Card */}
-        <Card className="w-full max-w-md mx-auto shadow-md">
+        <Card className="w-full max-w-md mx-auto shadow-md wallet-balance-card">
           <CardHeader>
             <CardTitle className="text-xl font-semibold">
               Wallet Balance
@@ -208,7 +309,7 @@ export default function Overview() {
         </Card>
 
         {/* Quick Actions Card */}
-        <Card className="w-full max-w-md mx-auto shadow-md">
+        <Card className="w-full max-w-md mx-auto shadow-md quick-actions-card">
           <CardHeader>
             <CardTitle className="text-xl font-semibold text-center">
               Quick Actions
@@ -236,7 +337,7 @@ export default function Overview() {
       </div>
 
       {/* Recent Transactions Card */}
-      <Card className="w-full shadow-md">
+      <Card className="w-full shadow-md recent-transactions-card">
         <CardHeader>
           <CardTitle className="text-xl font-semibold">
             Recent Transactions
