@@ -77,6 +77,15 @@ export const userApi = baseApi.injectEndpoints({
       }),
       providesTags: ["USER"],
     }),
+
+    updateUser: builder.mutation<IUser, { userId: string; payload: Partial<IUser> }>({
+      query: ({ userId, payload }) => ({
+        url: `/user/${userId}`,
+        method: "PATCH",
+        data: payload,
+      }),
+      invalidatesTags: ["USER"],
+    }),
   }),
 });
 
@@ -87,5 +96,6 @@ export const {
   useUnblockUserMutation,
   useApproveAgentMutation,
   useSuspendAgentMutation,
-  useSearchUsersQuery
+  useSearchUsersQuery,
+  useUpdateUserMutation
 } = userApi;
