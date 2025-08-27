@@ -10,7 +10,11 @@ import {
 } from "@/components/ui/select";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import type { ColumnDef, PaginationState, Updater } from "@tanstack/react-table";
+import type {
+  ColumnDef,
+  PaginationState,
+  Updater,
+} from "@tanstack/react-table";
 import type { ITransaction } from "@/redux/features/transaction/transactionApi";
 import { DataTable } from "@/components/ui/data-table";
 import DatePicker from "react-datepicker";
@@ -159,7 +163,7 @@ export default function UserTransactions() {
   }
 
   return (
-    <Card className="mx-auto max-w-7xl">
+    <Card className="container mx-auto">
       <CardHeader>
         <CardTitle>Your Transactions</CardTitle>
         <p className="text-sm text-muted-foreground">

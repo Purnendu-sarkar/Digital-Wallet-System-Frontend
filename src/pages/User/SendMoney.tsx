@@ -25,6 +25,7 @@ import { cn } from "@/lib/utils";
 import { Check, ChevronsUpDown } from "lucide-react";
 import { useSearchUsersQuery } from "@/redux/features/user/userApi";
 import { useSendMoneyMutation } from "@/redux/features/transaction/transactionApi";
+import { useNavigate } from "react-router";
 
 // Form schema with refined amount to prevent leading zeros
 const formSchema = z.object({
@@ -42,6 +43,7 @@ const formSchema = z.object({
 export default function SendMoney() {
   const [searchTerm, setSearchTerm] = React.useState("");
   const [open, setOpen] = React.useState(false);
+  const navigate = useNavigate();
   const debouncedSearch = React.useMemo(
     () => debounce((value: string) => setSearchTerm(value), 500),
     []
@@ -72,6 +74,7 @@ export default function SendMoney() {
         amount: values.amount,
       }).unwrap();
       toast.success("Money sent successfully");
+      navigate("/user/transactions");
       form.reset();
       setOpen(false);
       setSearchTerm("");
