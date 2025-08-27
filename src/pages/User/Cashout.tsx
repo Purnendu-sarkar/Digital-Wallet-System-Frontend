@@ -25,6 +25,7 @@ import { cn } from "@/lib/utils";
 import { Check, ChevronsUpDown } from "lucide-react";
 import { useSearchUsersQuery } from "@/redux/features/user/userApi";
 import { useCashOutMutation } from "@/redux/features/transaction/transactionApi";
+import { useNavigate } from "react-router";
 
 // Form schema with refined amount to prevent leading zeros
 const formSchema = z.object({
@@ -46,6 +47,7 @@ export default function Cashout() {
     () => debounce((value: string) => setSearchTerm(value), 500),
     []
   );
+  const navigate = useNavigate();
 
   const { data, isLoading: isSearching } = useSearchUsersQuery(
     { searchTerm },
@@ -72,6 +74,7 @@ export default function Cashout() {
         amount: values.amount,
       }).unwrap();
       toast.success("Cash-out successful");
+      navigate("/user/transactions");
       form.reset();
       setOpen(false);
       setSearchTerm("");
