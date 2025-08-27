@@ -23,14 +23,14 @@ The codebase follows best practices for modularity, reusability, and clean code.
 
 ## Agent Credentials
 
-- **Email**: 
-- **Password**: 
+- **Email**: agent@exam.com
+- **Password**: Agent123!
 
 
 ## User Credentials
 
-- **Email**: 
-- **Password**: 
+- **Email**: user@example.com
+- **Password**: User123!
 
 ## Features
 
