@@ -31,7 +31,7 @@ export function LoginForm({
       const res = await login(data).unwrap();
       if (res.success) {
         toast.success("Logged in successfully");
-        console.log("Login response:", res);
+        // console.log("Login response:", res);
 
         // Role-based redirection
         if (res.data.user.role === "USER") {
@@ -45,8 +45,8 @@ export function LoginForm({
         }
       }
     } catch (err: any) {
-      console.error("Login error:", err);
-      console.log("Login error response:", err?.data);
+      // console.error("Login error:", err);
+      // console.log("Login error response:", err?.data);
 
       const errorMessage =
         err?.data?.message ||
@@ -66,7 +66,7 @@ export function LoginForm({
       }
     }
   };
-  console.log(config.baseUrl);
+  // console.log(config.baseUrl);
 
   return (
     <div className={cn("flex flex-col gap-6", className)} {...props}>

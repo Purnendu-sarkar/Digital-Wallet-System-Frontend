@@ -31,7 +31,7 @@ import { CustomPieChart } from "@/components/ui/CustomPieChart";
 
 export default function AdminOverview() {
   const [activeTab, setActiveTab] = useState(
-    () => localStorage.getItem("activeTab") || "Users"
+    () => localStorage.getItem("activeTab") || "Distribution"
   );
   const [filterType, setFilterType] = useState<
     "lifetime" | "last7days" | "last30days" | "custom" | "specificDate"
@@ -303,7 +303,7 @@ export default function AdminOverview() {
         <TabsList className="bg-muted/40 backdrop-blur border border-border rounded-xl">
           <TabsTrigger value="Distribution">Distribution</TabsTrigger>
           <TabsTrigger value="Transactions">Transactions</TabsTrigger>
-          <TabsTrigger value="Volume">Volume</TabsTrigger>
+          <TabsTrigger value="Volume">Amount</TabsTrigger>
         </TabsList>
         <TabsContent value="Distribution">
           <Card className="bg-card text-card-foreground border-border">

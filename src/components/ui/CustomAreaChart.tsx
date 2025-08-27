@@ -31,7 +31,7 @@ type Props = {
 export function CustomAreaChart({ data, title, description, filterType, startDate, endDate }: Props) {
   const chartConfig = {
     value: {
-      label: "Value",
+      label: "Amount (৳)",
       color: "var(--chart-1)",
     },
   } satisfies ChartConfig;

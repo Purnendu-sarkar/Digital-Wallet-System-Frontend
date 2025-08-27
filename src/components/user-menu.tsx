@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import {
   BoltIcon,
   BookOpenIcon,
@@ -47,7 +48,7 @@ export default function UserMenu({ user }: { user: IUser }) {
         window.location.reload();
       }, 1);
     } catch (err) {
-      console.error("Logout error:", err);
+      // console.error("Logout error:", err);
       toast.error("Logout failed");
     }
   };

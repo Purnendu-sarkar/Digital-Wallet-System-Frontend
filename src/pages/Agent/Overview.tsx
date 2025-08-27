@@ -79,7 +79,7 @@ const Overview = () => {
     error: userError,
   } = useUserInfoQuery();
   const balance = userData?.data?.wallet?.balance || 0;
-  console.log("User Balance:", balance);
+  // console.log("User Balance:", balance);
 
   const [filterType, setFilterType] = useState<
     "lifetime" | "last7days" | "last30days"
@@ -185,14 +185,9 @@ const Overview = () => {
       <div className="stats-cards grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
         {isLoading || userLoading ? (
           <>
-            {[...Array(5)].map(
-              (
-                _,
-                i
-              ) => (
-                <Skeleton key={i} className="h-32 w-full" />
-              )
-            )}
+            {[...Array(5)].map((_, i) => (
+              <Skeleton key={i} className="h-32 w-full" />
+            ))}
           </>
         ) : (
           <>
@@ -268,7 +263,12 @@ const Overview = () => {
                   <CartesianGrid strokeDasharray="3 3" />
                   <XAxis dataKey="name" />
                   <YAxis />
-                  <Tooltip />
+                  <Tooltip
+                    formatter={(value: number) => [
+                      `৳ ${value.toLocaleString()} BDT`,
+                      "Amount",
+                    ]}
+                  />
                   <Bar dataKey="value" />
                 </BarChart>
               </ResponsiveContainer>
