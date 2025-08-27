@@ -1,5 +1,8 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { useUserInfoQuery } from "@/redux/features/auth/auth.api";
+import {
+  useResetPasswordMutation,
+  useUserInfoQuery,
+} from "@/redux/features/auth/auth.api";
 import { useUpdateUserMutation } from "@/redux/features/user/userApi";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -26,6 +29,7 @@ import { useEffect, useState } from "react";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import Password from "@/components/ui/Password";
 
 const updateSchema = z.object({
   name: z.string().min(2, "Name must be at least 2 characters").optional(),
@@ -35,11 +39,42 @@ const updateSchema = z.object({
     .optional(),
   address: z.string().optional(),
 });
+const resetPasswordSchema = z.object({
+  oldPassword: z
+    .string()
+    .min(8, "Old password must be at least 8 characters long")
+    .regex(
+      /^(?=.*[A-Z])/,
+      "Old password must contain at least 1 uppercase letter"
+    )
+    .regex(
+      /^(?=.*[!@#$%^&*])/,
+      "Old password must contain at least 1 special character"
+    )
+    .regex(/^(?=.*\d)/, "Old password must contain at least 1 number"),
+  newPassword: z
+    .string()
+    .min(8, "New password must be at least 8 characters long")
+    .regex(
+      /^(?=.*[A-Z])/,
+      "New password must contain at least 1 uppercase letter"
+    )
+    .regex(
+      /^(?=.*[!@#$%^&*])/,
+      "New password must contain at least 1 special character"
+    )
+    .regex(/^(?=.*\d)/, "New password must contain at least 1 number"),
+});
 
 interface UpdateFormData {
   name?: string;
   phone?: string;
   address?: string;
+}
+
+interface ResetPasswordFormData {
+  oldPassword: string;
+  newPassword: string;
 }
 
 export default function Profile() {
@@ -50,8 +85,11 @@ export default function Profile() {
   } = useUserInfoQuery();
   const userInfo = userData?.data;
   const [updateUser, { isLoading: updateLoading }] = useUpdateUserMutation();
+  const [resetPassword, { isLoading: resetPasswordLoading }] =
+    useResetPasswordMutation();
 
-  const [open, setOpen] = useState(false);
+  const [openUpdate, setOpenUpdate] = useState(false);
+  const [openResetPassword, setOpenResetPassword] = useState(false);
 
   const updateForm = useForm<UpdateFormData>({
     resolver: zodResolver(updateSchema),
@@ -59,6 +97,14 @@ export default function Profile() {
       name: "",
       phone: "",
       address: "",
+    },
+  });
+
+  const resetPasswordForm = useForm<ResetPasswordFormData>({
+    resolver: zodResolver(resetPasswordSchema),
+    defaultValues: {
+      oldPassword: "",
+      newPassword: "",
     },
   });
 
@@ -86,10 +132,25 @@ export default function Profile() {
     try {
       await updateUser({ userId: userInfo?._id, payload }).unwrap();
       toast.success("Profile updated successfully!");
-      setOpen(false); // ✅ Modal auto close
+      setOpenUpdate(false);
     } catch (error: any) {
       console.error("Update error:", error);
       toast.error(error?.data?.message || "Failed to update profile.");
+    }
+  };
+
+  const onResetPasswordSubmit = async (values: ResetPasswordFormData) => {
+    try {
+      await resetPassword({
+        oldPassword: values.oldPassword,
+        newPassword: values.newPassword,
+      }).unwrap();
+      toast.success("Password changed successfully!");
+      setOpenResetPassword(false);
+      resetPasswordForm.reset();
+    } catch (error: any) {
+      console.error("Reset password error:", error);
+      toast.error(error?.data?.message || "Failed to change password.");
     }
   };
 
@@ -132,7 +193,7 @@ export default function Profile() {
 
           <div className="flex justify-between pt-4">
             {/* Edit Profile Button */}
-            <Dialog open={open} onOpenChange={setOpen}>
+            <Dialog open={openUpdate} onOpenChange={setOpenUpdate}>
               <DialogTrigger asChild>
                 <Button variant="outline">Edit Profile</Button>
               </DialogTrigger>
@@ -209,9 +270,71 @@ export default function Profile() {
             </Dialog>
 
             {/* Change Password Button */}
-            <Button variant="default" className="rounded-xl">
-              Change Password
-            </Button>
+            <Dialog
+              open={openResetPassword}
+              onOpenChange={setOpenResetPassword}
+            >
+              <DialogTrigger asChild>
+                <Button variant="default" className="rounded-xl">
+                  Change Password
+                </Button>
+              </DialogTrigger>
+              <DialogContent className="max-w-md">
+                <DialogHeader>
+                  <DialogTitle>Change Password</DialogTitle>
+                </DialogHeader>
+                <Form {...resetPasswordForm}>
+                  <form
+                    onSubmit={resetPasswordForm.handleSubmit(
+                      onResetPasswordSubmit
+                    )}
+                    className="space-y-4"
+                  >
+                    <FormField
+                      control={resetPasswordForm.control}
+                      name="oldPassword"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Old Password</FormLabel>
+                          <FormControl>
+                            <Password
+                              {...field}
+                              placeholder="Enter your old password"
+                              className="rounded-xl"
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    <FormField
+                      control={resetPasswordForm.control}
+                      name="newPassword"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>New Password</FormLabel>
+                          <FormControl>
+                            <Password
+                              {...field}
+                              placeholder="Enter your new password"
+                              className="rounded-xl"
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    <Button
+                      type="submit"
+                      disabled={resetPasswordLoading}
+                      className="w-full rounded-xl"
+                    >
+                      {resetPasswordLoading ? "Changing..." : "Change Password"}
+                    </Button>
+                  </form>
+                </Form>
+              </DialogContent>
+            </Dialog>
           </div>
         </CardContent>
       </Card>

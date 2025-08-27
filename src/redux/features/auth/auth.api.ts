@@ -3,6 +3,14 @@ import { baseApi } from "@/redux/baseApi";
 import type { IResponse, ISendOtp, IVerifyOtp } from "@/types";
 
 
+interface IResetPasswordResponse {
+  success: boolean;
+  statusCode: number;
+  message: string;
+  data: null;
+}
+
+
 export const authApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
     login: builder.mutation({
@@ -48,6 +56,15 @@ export const authApi = baseApi.injectEndpoints({
       }),
       providesTags: ["USER"],
     }),
+
+    resetPassword: builder.mutation<IResetPasswordResponse, { oldPassword: string; newPassword: string }>({
+      query: ({ oldPassword, newPassword }) => ({
+        url: "/auth/reset-password",
+        method: "POST",
+        data: { oldPassword, newPassword },
+      }),
+      invalidatesTags: ["USER"],
+    }),
   }),
 
 });
@@ -59,4 +76,5 @@ export const {
   useVerifyOtpMutation,
   useLogoutMutation,
   useUserInfoQuery,
+  useResetPasswordMutation,
 } = authApi;
