@@ -15,10 +15,10 @@ import { userSidebarItems } from "./userSidebarItems";
 import { agentSidebarItems } from "./agentSidebarItems";
 import { adminSidebarItems } from "./adminSidebarItems";
 import Unauthorized from "@/pages/Unauthorized";
-import Contact from "@/pages/Contact";
 import FAQ from "@/pages/FAQ";
 import Features from "@/pages/Features";
 import HomePage from "@/pages/HomePage";
+import { Contact } from "@/pages/Contact";
 
 export const router = createBrowserRouter([
   {
