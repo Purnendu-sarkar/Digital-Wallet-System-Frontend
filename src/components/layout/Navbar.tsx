@@ -1,6 +1,6 @@
-import InfoMenu from "@/components/info-menu";
+// import InfoMenu from "@/components/info-menu";
 import logo from "@/assets/icons/digital-wallet.png";
-import NotificationMenu from "@/components/notification-menu";
+// import NotificationMenu from "@/components/notification-menu";
 import { Button } from "@/components/ui/button";
 import {
   NavigationMenu,
@@ -115,9 +115,9 @@ export default function Navbar() {
             {/* Mode toggler */}
             <ModeToggle />
             {/* Info menu */}
-            <InfoMenu />
+            {/* <InfoMenu /> */}
             {/* Notification */}
-            <NotificationMenu />
+            {/* <NotificationMenu /> */}
           </div>
           {/* User menu */}
           {user?.data ? (
@@ -127,7 +127,6 @@ export default function Navbar() {
               <Button variant="outline">Login</Button>
             </Link>
           )}
-          {/* <UserMenu /> */}
         </div>
       </div>
     </header>
