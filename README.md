@@ -1,5 +1,7 @@
 # Digital Wallet Frontend
 
+![Digital-Wallet-System-Frontend Screenshot](https://res.cloudinary.com/djx2qopcz/image/upload/v1757256676/Digital-Wallet-System-Frontend_zyrvbq.png)
+
 ## 🎯 Project Overview
 
 This project is a secure, role-based, and user-friendly frontend application for a Digital Wallet System, similar to bKash or Nagad, built using React.js, Redux Toolkit, RTK Query, and TypeScript. It consumes a backend API (mocked or provided) to enable seamless financial operations and wallet management for Users, Agents, and Admins. The application features a responsive UI, polished UX, role-based dashboards, and a public landing section accessible without login.
