@@ -28,7 +28,7 @@ const chartConfig = {
     icon: Activity,
   },
   volume: {
-    label: "Volume (৳)",
+    label: "Amount  (৳)",
     color: "#c7e25b", 
     icon: DollarSign,
   },

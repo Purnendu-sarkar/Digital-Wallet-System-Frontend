@@ -135,6 +135,7 @@ export default function Profile() {
       setOpenUpdate(false);
     } catch (error: any) {
       console.error("Update error:", error);
+      // console.error("Update error:", error);
       toast.error(error?.data?.message || "Failed to update profile.");
     }
   };
@@ -150,6 +151,7 @@ export default function Profile() {
       resetPasswordForm.reset();
     } catch (error: any) {
       console.error("Reset password error:", error);
+      // console.error("Reset password error:", error);
       toast.error(error?.data?.message || "Failed to change password.");
     }
   };

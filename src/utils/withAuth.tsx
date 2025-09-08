@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import { Skeleton } from "@/components/ui/skeleton";
 import { useUserInfoQuery } from "@/redux/features/auth/auth.api"; // ধরে নেয়া auth API
 import type { TRole } from "@/types";
 import { Navigate } from "react-router-dom";
@@ -10,7 +11,7 @@ export const withAuth = (
   return function ProtectedComponent(props: any) {
     const { data: userData, isLoading } = useUserInfoQuery(undefined);
 
-    if (isLoading) return <div>Loading...</div>; // Skeleton loader ADDED Future
+    if (isLoading) return <Skeleton className="h-full w-full" />;
 
     if (!userData) return <Navigate to="/login" />;
 

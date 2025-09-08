@@ -1,18 +1,11 @@
-import {
-  BoltIcon,
-  BookOpenIcon,
-  Layers2Icon,
-  LogOutIcon,
-  PinIcon,
-  UserPenIcon,
-} from "lucide-react";
+/* eslint-disable @typescript-eslint/no-unused-vars */
+import { LogOutIcon } from "lucide-react";
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
-  DropdownMenuGroup,
   DropdownMenuItem,
   DropdownMenuLabel,
   DropdownMenuSeparator,
@@ -47,7 +40,7 @@ export default function UserMenu({ user }: { user: IUser }) {
         window.location.reload();
       }, 1);
     } catch (err) {
-      console.error("Logout error:", err);
+      // console.error("Logout error:", err);
       toast.error("Logout failed");
     }
   };
@@ -74,7 +67,7 @@ export default function UserMenu({ user }: { user: IUser }) {
             {user?.email}
           </span>
         </DropdownMenuLabel>
-        <DropdownMenuSeparator />
+        {/* <DropdownMenuSeparator />
         <DropdownMenuGroup>
           <DropdownMenuItem>
             <BoltIcon size={16} className="opacity-60" aria-hidden="true" />
@@ -99,7 +92,7 @@ export default function UserMenu({ user }: { user: IUser }) {
             <UserPenIcon size={16} className="opacity-60" aria-hidden="true" />
             <span>Option 5</span>
           </DropdownMenuItem>
-        </DropdownMenuGroup>
+        </DropdownMenuGroup> */}
         <DropdownMenuSeparator />
         <DropdownMenuItem onClick={() => handleLogout()}>
           <LogOutIcon size={16} className="opacity-60" aria-hidden="true" />

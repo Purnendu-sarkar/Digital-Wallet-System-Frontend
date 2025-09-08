@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -68,7 +69,7 @@ export default function Verify() {
         setTimer(5);
       }
     } catch (err) {
-      console.log(err);
+      // console.log(err);
       toast.error("Failed to send OTP", { id: toastId });
     }
   };
@@ -88,7 +89,7 @@ export default function Verify() {
         navigate("/login"); // Redirect to login after verification
       }
     } catch (err) {
-      console.log(err);
+      // console.log(err);
       toast.error("Invalid OTP", { id: toastId });
     }
   };
@@ -106,7 +107,7 @@ export default function Verify() {
 
     const timerId = setInterval(() => {
       setTimer((prev) => (prev > 0 ? prev - 1 : 0));
-      console.log("Tick");
+      // console.log("Tick");
     }, 1000);
 
     return () => clearInterval(timerId);

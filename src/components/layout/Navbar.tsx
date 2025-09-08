@@ -1,12 +1,14 @@
-import InfoMenu from "@/components/info-menu";
+// import InfoMenu from "@/components/info-menu";
 import logo from "@/assets/icons/digital-wallet.png";
-import NotificationMenu from "@/components/notification-menu";
+// import NotificationMenu from "@/components/notification-menu";
 import { Button } from "@/components/ui/button";
 import {
   NavigationMenu,
+  NavigationMenuContent,
   NavigationMenuItem,
   NavigationMenuLink,
   NavigationMenuList,
+  NavigationMenuTrigger,
 } from "@/components/ui/navigation-menu";
 import {
   Popover,
@@ -28,13 +30,34 @@ export default function Navbar() {
     { href: "/features", label: "Features" },
     { href: "/contact", label: "Contact" },
     { href: "/faq", label: "FAQ" },
+    { href: "/blog", label: "Blog" },
     ...(user?.data
       ? [{ href: `/${user.data.role}/overview`, label: "Dashboard" }]
       : []),
   ];
 
+  // Mega Menu items
+  const megaMenuItems = [
+    {
+      title: "Core Features",
+      items: [
+        { href: "/features/payments", label: "Payments" },
+        { href: "/features/transfers", label: "Transfers" },
+        { href: "/features/security", label: "Security" },
+      ],
+    },
+    {
+      title: "Advanced Features",
+      items: [
+        { href: "/features/automation", label: "Automation" },
+        { href: "/features/analytics", label: "Analytics" },
+        { href: "/features/integrations", label: "Integrations" },
+      ],
+    },
+  ];
+
   return (
-    <header className="border-b">
+    <header className="sticky top-0 z-50 bg-primary text-foreground border-b">
       <div className="container mx-auto px-4 flex h-16 items-center justify-between gap-4">
         {/* Left side */}
         <div className="flex items-center gap-2">
@@ -42,7 +65,7 @@ export default function Navbar() {
           <Popover>
             <PopoverTrigger asChild>
               <Button
-                className="group size-8 md:hidden"
+                className="group size-8 md:hidden bg-secondary text-secondary-foreground hover:bg-secondary/80"
                 variant="ghost"
                 size="icon"
               >
@@ -73,13 +96,16 @@ export default function Navbar() {
                 </svg>
               </Button>
             </PopoverTrigger>
-            <PopoverContent align="start" className="w-36 p-1 md:hidden">
+            <PopoverContent
+              align="start"
+              className="w-36 p-1 md:hidden bg-popover text-popover-foreground"
+            >
               <NavigationMenu className="max-w-none *:w-full">
                 <NavigationMenuList className="flex-col items-start gap-0 md:gap-2">
                   {navigationLinks.map((link, index) => (
                     <NavigationMenuItem key={index} className="w-full">
                       <NavigationMenuLink asChild className="py-1.5">
-                        <Link to={link.href}>{link.label} </Link>
+                        <Link to={link.href}>{link.label}</Link>
                       </NavigationMenuLink>
                     </NavigationMenuItem>
                   ))}
@@ -89,22 +115,51 @@ export default function Navbar() {
           </Popover>
           {/* Main nav */}
           <div className="flex items-center gap-6">
-            <a href="/" className="flex items-center gap-2 ">
+            <a href="/" className="flex items-center gap-2">
               <img src={logo} alt="Logo" className="h-6 w-auto" />
             </a>
             {/* Navigation menu */}
             <NavigationMenu className="max-md:hidden">
               <NavigationMenuList className="gap-2">
-                {navigationLinks.map((link, index) => (
-                  <NavigationMenuItem key={index}>
-                    <NavigationMenuLink
-                      asChild
-                      className="text-muted-foreground hover:text-primary py-1.5 font-medium"
-                    >
-                      <Link to={link.href}>{link.label} </Link>
-                    </NavigationMenuLink>
-                  </NavigationMenuItem>
-                ))}
+                {navigationLinks.map((link, index) =>
+                  link.label === "Features" ? (
+                    <NavigationMenuItem key={index}>
+                      <NavigationMenuTrigger className="text-foreground hover:text-accent-foreground bg-transparent hover:bg-accent/10">
+                        {link.label}
+                      </NavigationMenuTrigger>
+                      <NavigationMenuContent>
+                        <div className="grid w-[400px] gap-3 p-4 md:w-[500px] md:grid-cols-2 lg:w-[600px] bg-popover text-popover-foreground">
+                          {megaMenuItems.map((section, idx) => (
+                            <div key={idx} className="flex flex-col gap-2">
+                              <h3 className="text-lg font-semibold">
+                                {section.title}
+                              </h3>
+                              {section.items.map((item, i) => (
+                                <NavigationMenuLink asChild key={i}>
+                                  <Link
+                                    to={item.href}
+                                    className="text-muted-foreground hover:text-primary block py-1"
+                                  >
+                                    {item.label}
+                                  </Link>
+                                </NavigationMenuLink>
+                              ))}
+                            </div>
+                          ))}
+                        </div>
+                      </NavigationMenuContent>
+                    </NavigationMenuItem>
+                  ) : (
+                    <NavigationMenuItem key={index}>
+                      <NavigationMenuLink
+                        asChild
+                        className="text-foreground hover:text-accent-foreground py-1.5 font-medium"
+                      >
+                        <Link to={link.href}>{link.label}</Link>
+                      </NavigationMenuLink>
+                    </NavigationMenuItem>
+                  )
+                )}
               </NavigationMenuList>
             </NavigationMenu>
           </div>
@@ -115,19 +170,23 @@ export default function Navbar() {
             {/* Mode toggler */}
             <ModeToggle />
             {/* Info menu */}
-            <InfoMenu />
+            {/* <InfoMenu /> */}
             {/* Notification */}
-            <NotificationMenu />
+            {/* <NotificationMenu /> */}
           </div>
           {/* User menu */}
           {user?.data ? (
             <UserMenu user={user.data} />
           ) : (
             <Link to="/login">
-              <Button variant="outline">Login</Button>
+              <Button
+                variant="outline"
+                className="border-border text-foreground hover:bg-secondary hover:text-secondary-foreground"
+              >
+                Login
+              </Button>
             </Link>
           )}
-          {/* <UserMenu /> */}
         </div>
       </div>
     </header>
