@@ -5,11 +5,37 @@ import { useUserInfoQuery } from "@/redux/features/auth/auth.api";
 import { useGetAllTransactionsQuery } from "@/redux/features/transaction/transactionApi";
 import { useNavigate } from "react-router";
 import { toast } from "sonner";
+import { motion } from "framer-motion";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import cashBack from "@/assets/images/offers/10-cashback.webp";
 import FreeTransfers from "@/assets/images/offers/FreeTransfers.jpg";
 import { Star } from "lucide-react";
+import Ayesha from "@/assets/images/team/ayesha.jpg";
+import Tanvir from "@/assets/images/team/tanvir.jpg";
+import Sadia from "@/assets/images/team/sadia.jpg";
+
+// Team data
+const teamMembers = [
+  {
+    name: "Ayesha Rahman",
+    role: "Founder & CEO",
+    bio: "With over 15 years in fintech, Ayesha leads our mission to make financial services accessible to all.",
+    image: Ayesha,
+  },
+  {
+    name: "Tanvir Ahmed",
+    role: "Chief Technology Officer",
+    bio: "Tanvir drives innovation in our platform, ensuring secure and seamless transactions.",
+    image: Tanvir,
+  },
+  {
+    name: "Sadia Khan",
+    role: "Head of Operations",
+    bio: "Sadia oversees daily operations, ensuring our users and agents have the best experience.",
+    image: Sadia,
+  },
+];
 
 export default function HomePage() {
   const navigate = useNavigate();
@@ -66,6 +92,21 @@ export default function HomePage() {
         description: "Offer claimed successfully!",
       });
     }
+  };
+
+  // Animation variants for smooth transitions
+  const containerVariants = {
+    hidden: { opacity: 0, y: 20 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: { duration: 0.5, staggerChildren: 0.2 },
+    },
+  };
+
+  const itemVariants = {
+    hidden: { opacity: 0, y: 10 },
+    visible: { opacity: 1, y: 0, transition: { duration: 0.3 } },
   };
 
   return (
@@ -168,6 +209,47 @@ export default function HomePage() {
           </Card>
         </div>
       </section>
+
+       {/* Team Section */}
+      <section className="container mx-auto px-4 sm:px-6 lg:px-8 py-16">
+        <div>
+          <motion.h2
+            className="text-3xl md:text-4xl font-bold text-center mb-12"
+            variants={itemVariants}
+            initial="hidden"
+            animate="visible"
+          >
+            Meet Our Team
+          </motion.h2>
+          <motion.div
+            className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"
+            variants={containerVariants}
+            initial="hidden"
+            animate="visible"
+          >
+            {teamMembers.map((member) => (
+              <Card
+                key={member.name}
+                className="hover:shadow-lg transition-shadow"
+              >
+                <CardContent className="pt-6">
+                  <div className="flex flex-col items-center">
+                    <img
+                      src={member.image}
+                      alt={member.name}
+                      className="h-24 w-24 rounded-full mb-4 object-cover"
+                    />
+                    <h3 className="text-xl font-semibold">{member.name}</h3>
+                    <p className="text-muted-foreground">{member.role}</p>
+                    <p className="text-center mt-2 text-sm">{member.bio}</p>
+                  </div>
+                </CardContent>
+              </Card>
+            ))}
+          </motion.div>
+        </div>
+      </section>
+
     </div>
   );
 }
