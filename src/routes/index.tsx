@@ -20,7 +20,7 @@ import Features from "@/pages/Features";
 import HomePage from "@/pages/HomePage";
 import { Contact } from "@/pages/Contact";
 import NotFound from "@/pages/NotFound";
-import Blog from "@/pages/BlogPage";
+import BlogPage from "@/pages/BlogPage";
 
 export const router = createBrowserRouter([
   {
@@ -48,9 +48,13 @@ export const router = createBrowserRouter([
         path: "features",
       },
       {
-        Component: Blog,
+        Component: BlogPage,
         path: "blog",
-      }
+      },
+      {
+        Component: BlogPage, // অথবা একটি নতুন BlogPostPage কম্পোনেন্ট
+        path: "/blog/:id",
+      },
       // {
       //   Component: UserDashboard,
       //   path: "user/dashboard",

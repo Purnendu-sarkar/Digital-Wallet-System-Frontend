@@ -1,5 +1,4 @@
 import { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import {
@@ -13,16 +12,8 @@ import { Skeleton } from "@/components/ui/skeleton";
 import Secure from "@/assets/images/blog/Post-1.png";
 import Payments from "@/assets/images/blog/Post-3.png";
 import Features from "@/assets/images/blog/Post-2.webp";
-
-// Define interface for blog post
-interface BlogPost {
-  id: number;
-  title: string;
-  excerpt: string;
-  author: string;
-  date: string;
-  image: string;
-}
+import BlogModal from "./BlogModal";
+import type { BlogPost } from "@/types";
 
 // Mock blog post data
 const mockBlogPosts: BlogPost[] = [
@@ -75,6 +66,7 @@ export default function BlogPage() {
   const [posts, setPosts] = useState<BlogPost[]>([]);
   const [loading, setLoading] = useState(true);
   const [page, setPage] = useState(1);
+  const [selectedPost, setSelectedPost] = useState<BlogPost | null>(null); 
   const postsPerPage = 6;
 
   // Simulate fetching posts
@@ -125,7 +117,7 @@ export default function BlogPage() {
               variant="secondary"
               className="text-secondary-foreground"
             >
-              <Link to="/contact">Get in Touch</Link>
+              <a href="/contact">Get in Touch</a>
             </Button>
           </motion.div>
         </div>
@@ -181,8 +173,11 @@ export default function BlogPage() {
                           </p>
                         </CardContent>
                         <CardFooter>
-                          <Button asChild variant="outline">
-                            <Link to={`/blog/${post.id}`}>Read More</Link>
+                          <Button
+                            variant="outline"
+                            onClick={() => setSelectedPost(post)}
+                          >
+                            Read More
                           </Button>
                         </CardFooter>
                       </Card>
@@ -224,6 +219,13 @@ export default function BlogPage() {
           )}
         </div>
       </section>
+
+      {/* Blog Modal */}
+      <AnimatePresence>
+        {selectedPost && (
+          <BlogModal post={selectedPost} onClose={() => setSelectedPost(null)} />
+        )}
+      </AnimatePresence>
     </div>
   );
 }

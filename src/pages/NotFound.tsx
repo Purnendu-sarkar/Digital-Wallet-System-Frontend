@@ -32,7 +32,7 @@ const NotFound = () => {
         </Button>
         <Button
           onClick={() => navigate(-1)}
-          className="bg-secondary text-white px-6 py-2 rounded"
+          className="bg-secondary text-secondary-foreground px-6 py-2 rounded"
         >
           Go Back
         </Button>
