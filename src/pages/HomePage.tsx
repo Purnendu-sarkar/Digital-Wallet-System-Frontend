@@ -6,7 +6,13 @@ import { useGetAllTransactionsQuery } from "@/redux/features/transaction/transac
 import { useNavigate } from "react-router";
 import { toast } from "sonner";
 import { motion } from "framer-motion";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import cashBack from "@/assets/images/offers/10-cashback.webp";
 import FreeTransfers from "@/assets/images/offers/FreeTransfers.jpg";
@@ -16,6 +22,7 @@ import Tanvir from "@/assets/images/team/tanvir.jpg";
 import Sadia from "@/assets/images/team/sadia.jpg";
 import { Link } from "react-router-dom";
 import { Input } from "@/components/ui/input";
+import { mockBlogPosts } from "@/data/mockBlogPosts";
 
 // Team data
 const teamMembers = [
@@ -188,6 +195,55 @@ export default function HomePage() {
         </div>
       </section>
 
+      {/* Blog Section */}
+      <section className="container mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        <motion.h2
+          className="text-3xl font-bold text-center mb-8"
+          variants={itemVariants}
+          initial="hidden"
+          animate="visible"
+        >
+          Latest Blog Posts
+        </motion.h2>
+        <motion.div
+          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
+          variants={containerVariants}
+          initial="hidden"
+          animate="visible"
+        >
+          {mockBlogPosts.map((post) => (
+            <Card key={post.id} className="hover:shadow-lg transition-shadow">
+              <CardHeader>
+                <img
+                  src={post.image}
+                  alt={post.title}
+                  className="h-40 w-full object-cover rounded-t-md"
+                />
+                <CardTitle className="text-xl font-semibold mt-4">
+                  {post.title}
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <p className="text-muted-foreground mb-4">{post.excerpt}</p>
+                <p className="text-sm text-muted-foreground">
+                  By {post.author} | {post.date}
+                </p>
+              </CardContent>
+              <CardFooter>
+                <Button asChild variant="outline">
+                  <Link to="/blog">Read More</Link>
+                </Button>
+              </CardFooter>
+            </Card>
+          ))}
+        </motion.div>
+        <div className="flex justify-center mt-8">
+          <Button asChild size="lg">
+            <Link to="/blog">View All Blogs</Link>
+          </Button>
+        </div>
+      </section>
+
       {/* Statistics Section */}
       <section className="container mx-auto px-4 sm:px-6 lg:px-8 text-center py-12">
         <h2 className="text-3xl font-bold mb-8">Our Achievements</h2>
@@ -256,11 +312,20 @@ export default function HomePage() {
        {/* Newsletter Section */}
       <section className="container mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div className="bg-card text-card-foreground py-12 text-center rounded-lg">
-          <h2 className="text-3xl font-bold px-8 mb-4">Subscribe to Our Newsletter</h2>
-          <p className="mb-6 text-muted-foreground">Stay updated with the latest offers and updates!</p>
+          <h2 className="text-3xl font-bold px-8 mb-4">
+            Subscribe to Our Newsletter
+          </h2>
+          <p className="mb-6 text-muted-foreground">
+            Stay updated with the latest offers and updates!
+          </p>
           <div className="flex justify-center gap-4 max-w-md mx-auto">
-            <Input placeholder="Enter your email" className="bg-input text-foreground" />
-            <Button className="bg-primary text-primary-foreground hover:bg-primary/90">Subscribe</Button>
+            <Input
+              placeholder="Enter your email"
+              className="bg-input text-foreground"
+            />
+            <Button className="bg-primary text-primary-foreground hover:bg-primary/90">
+              Subscribe
+            </Button>
           </div>
         </div>
       </section>
