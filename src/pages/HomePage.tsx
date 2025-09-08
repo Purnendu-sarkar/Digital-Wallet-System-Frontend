@@ -16,7 +16,7 @@ import {
 import { Button } from "@/components/ui/button";
 import cashBack from "@/assets/images/offers/10-cashback.webp";
 import FreeTransfers from "@/assets/images/offers/FreeTransfers.jpg";
-import { Star } from "lucide-react";
+import { Star, Send, DollarSign, History, Wallet } from "lucide-react";
 import Ayesha from "@/assets/images/team/ayesha.jpg";
 import Tanvir from "@/assets/images/team/tanvir.jpg";
 import Sadia from "@/assets/images/team/sadia.jpg";
@@ -43,6 +43,31 @@ const teamMembers = [
     role: "Head of Operations",
     bio: "Sadia oversees daily operations, ensuring our users and agents have the best experience.",
     image: Sadia,
+  },
+];
+
+// Services data
+const services = [
+  {
+    title: "Send Money",
+    description: "Transfer money instantly to other users with low fees.",
+    icon: Send,
+  },
+  {
+    title: "Cash-In",
+    description: "Add funds to your wallet through our trusted agents.",
+    icon: DollarSign,
+  },
+  {
+    title: "Cash-Out",
+    description: "Withdraw cash easily via our agent network.",
+    icon: Wallet,
+  },
+  {
+    title: "Transaction History",
+    description:
+      "Track all your transactions with detailed history and filters.",
+    icon: History,
   },
 ];
 
@@ -164,6 +189,41 @@ export default function HomePage() {
             </CardContent>
           </Card>
         )}
+      </section>
+
+      {/* Our Services Section */}
+      <section className="container mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        <motion.h2
+          className="text-3xl font-bold text-center mb-8"
+          variants={itemVariants}
+          initial="hidden"
+          animate="visible"
+        >
+          Our Services
+        </motion.h2>
+        <motion.div
+          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6"
+          variants={containerVariants}
+          initial="hidden"
+          animate="visible"
+        >
+          {services.map((service, index) => (
+            <Card
+              key={index}
+              className="hover:shadow-lg transition-shadow flex flex-col items-center text-center"
+            >
+              <CardContent className="pt-6">
+                <service.icon className="h-12 w-12 text-primary mb-4  rounded-full p-2 mx-auto" />
+                <CardTitle className="text-xl font-semibold">
+                  {service.title}
+                </CardTitle>
+                <p className="text-muted-foreground mt-2">
+                  {service.description}
+                </p>
+              </CardContent>
+            </Card>
+          ))}
+        </motion.div>
       </section>
 
       {/* Testimonial Section */}
@@ -309,7 +369,7 @@ export default function HomePage() {
         </div>
       </section>
 
-       {/* Newsletter Section */}
+      {/* Newsletter Section */}
       <section className="container mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div className="bg-card text-card-foreground py-12 text-center rounded-lg">
           <h2 className="text-3xl font-bold px-8 mb-4">
