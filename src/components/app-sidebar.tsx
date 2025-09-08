@@ -1,7 +1,9 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import * as React from "react";
 import {
   Sidebar,
   SidebarContent,
+  SidebarFooter,
   SidebarGroup,
   SidebarGroupContent,
   SidebarGroupLabel,
@@ -12,15 +14,37 @@ import {
   SidebarRail,
 } from "@/components/ui/sidebar";
 import Logo from "@/assets/icons/digital-wallet.png";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { getSidebarItems } from "@/utils/getSidebarItems";
-import { useUserInfoQuery } from "@/redux/features/auth/auth.api";
+import { useUserInfoQuery, useLogoutMutation, authApi } from "@/redux/features/auth/auth.api";
+import { useAppDispatch } from "@/redux/hook";
+import { toast } from "sonner";
+import { LogOutIcon } from "lucide-react";
+import { Button } from "./ui/button";
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const { data: userData } = useUserInfoQuery(undefined);
+  const [logout] = useLogoutMutation();
+  const dispatch = useAppDispatch();
+  const navigate = useNavigate();
 
   const data = {
     navMain: getSidebarItems(userData?.data?.role),
+  };
+
+  const handleLogout = async () => {
+    try {
+      await logout(undefined).unwrap();
+      dispatch(authApi.util.resetApiState());
+      navigate("/login", { replace: true });
+      toast.success("Logged out successfully");
+
+      setTimeout(() => {
+        window.location.reload();
+      }, 1);
+    } catch (err) {
+      toast.error("Logout failed");
+    }
   };
 
   return (
@@ -48,6 +72,15 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
           </SidebarGroup>
         ))}
       </SidebarContent>
+      <SidebarFooter>
+        <Button
+          onClick={handleLogout}
+          className="flex items-center gap-2 bg-transparent hover:bg-destructive/10 text-destructive shadow-accent-foreground border-1"
+        >
+          <LogOutIcon size={16} />
+          <span>Logout</span>
+        </Button>
+      </SidebarFooter>
       <SidebarRail />
     </Sidebar>
   );
