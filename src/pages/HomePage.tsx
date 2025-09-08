@@ -9,6 +9,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import cashBack from "@/assets/images/offers/10-cashback.webp";
 import FreeTransfers from "@/assets/images/offers/FreeTransfers.jpg";
+import { Star } from "lucide-react";
 
 export default function HomePage() {
   const navigate = useNavigate();
@@ -42,6 +43,15 @@ export default function HomePage() {
       description: "No fees on transfers this month",
       img: FreeTransfers,
     },
+  ];
+
+  const testimonials = [
+    {
+      name: "Pranav Kumar",
+      review: "This wallet app made my life so much easier!",
+      rating: 5,
+    },
+    { name: "Ravi Shukla", review: "Fast and secure transactions!", rating: 4 },
   ];
 
   const handleClaimOffer = (offerTitle: string) => {
@@ -103,6 +113,35 @@ export default function HomePage() {
             </CardContent>
           </Card>
         )}
+      </section>
+
+      {/* Testimonial Section */}
+      <section className="container mx-auto px-4 sm:px-6 lg:px-8">
+        <h2 className="text-3xl font-bold text-center mb-8">
+          What Our Users Say
+        </h2>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          {testimonials.map((testimonial, index) => (
+            <Card key={index}>
+              <CardContent className="pt-6">
+                <p className="text-muted-foreground">{testimonial.review}</p>
+                <p className="mt-4 font-semibold">{testimonial.name}</p>
+                <div className="flex items-center mt-2">
+                  {[...Array(5)].map((_, i) => (
+                    <Star
+                      key={i}
+                      className={`h-4 w-4 ${
+                        i < testimonial.rating
+                          ? "text-yellow-400"
+                          : "text-gray-300"
+                      }`}
+                    />
+                  ))}
+                </div>
+              </CardContent>
+            </Card>
+          ))}
+        </div>
       </section>
     </div>
   );
