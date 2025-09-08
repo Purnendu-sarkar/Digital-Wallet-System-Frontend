@@ -20,6 +20,7 @@ import Features from "@/pages/Features";
 import HomePage from "@/pages/HomePage";
 import { Contact } from "@/pages/Contact";
 import NotFound from "@/pages/NotFound";
+import Blog from "@/pages/BlogPage";
 
 export const router = createBrowserRouter([
   {
@@ -46,6 +47,10 @@ export const router = createBrowserRouter([
         Component: Features,
         path: "features",
       },
+      {
+        Component: Blog,
+        path: "blog",
+      }
       // {
       //   Component: UserDashboard,
       //   path: "user/dashboard",
