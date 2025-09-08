@@ -49,7 +49,7 @@ const teamMembers = [
 export default function HomePage() {
   const navigate = useNavigate();
   const { data: userData, isLoading: isUserLoading } = useUserInfoQuery();
-  console.log("User Data:", userData?.data);
+  // console.log("User Data:", userData?.data);
   const {
     data: transactionData,
     isLoading: isTransactionLoading,

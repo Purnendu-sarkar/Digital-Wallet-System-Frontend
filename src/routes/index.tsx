@@ -21,6 +21,12 @@ import HomePage from "@/pages/HomePage";
 import { Contact } from "@/pages/Contact";
 import NotFound from "@/pages/NotFound";
 import BlogPage from "@/pages/BlogPage";
+import Payments from "@/pages/Features/Payments";
+import Transfers from "@/pages/Features/Transfers";
+import Security from "@/pages/Features/Security";
+import Automation from "@/pages/Features/Automation";
+import Analytics from "@/pages/Features/Analytics";
+import Integrations from "@/pages/Features/Integrations";
 
 export const router = createBrowserRouter([
   {
@@ -48,11 +54,35 @@ export const router = createBrowserRouter([
         path: "features",
       },
       {
+        Component: Payments,
+        path: "features/payments",
+      },
+      {
+        Component: Transfers,
+        path: "features/transfers",
+      },
+      {
+        Component: Security,
+        path: "features/security",
+      },
+      {
+        Component: Automation,
+        path: "features/automation",
+      },
+      {
+        Component: Analytics,
+        path: "features/analytics",
+      },
+      {
+        Component: Integrations,
+        path: "features/integrations",
+      },
+      {
         Component: BlogPage,
         path: "blog",
       },
       {
-        Component: BlogPage, // অথবা একটি নতুন BlogPostPage কম্পোনেন্ট
+        Component: BlogPage,
         path: "/blog/:id",
       },
       // {
