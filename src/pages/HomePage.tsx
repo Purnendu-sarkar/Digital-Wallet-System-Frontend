@@ -15,6 +15,7 @@ import Ayesha from "@/assets/images/team/ayesha.jpg";
 import Tanvir from "@/assets/images/team/tanvir.jpg";
 import Sadia from "@/assets/images/team/sadia.jpg";
 import { Link } from "react-router-dom";
+import { Input } from "@/components/ui/input";
 
 // Team data
 const teamMembers = [
@@ -252,9 +253,21 @@ export default function HomePage() {
         </div>
       </section>
 
+       {/* Newsletter Section */}
+      <section className="container mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        <div className="bg-card text-card-foreground py-12 text-center rounded-lg">
+          <h2 className="text-3xl font-bold px-8 mb-4">Subscribe to Our Newsletter</h2>
+          <p className="mb-6 text-muted-foreground">Stay updated with the latest offers and updates!</p>
+          <div className="flex justify-center gap-4 max-w-md mx-auto">
+            <Input placeholder="Enter your email" className="bg-input text-foreground" />
+            <Button className="bg-primary text-primary-foreground hover:bg-primary/90">Subscribe</Button>
+          </div>
+        </div>
+      </section>
+
       {/* Call to Action Section */}
       <section className="container mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <div className="bg-muted text-center rounded-lg p-8">
+        <div className="bg-card text-card-foreground text-center rounded-lg p-8">
           <h2 className="text-3xl font-bold mb-4">Get Started Today!</h2>
           <p className="mb-6">
             Join millions of users and experience seamless digital payments.
