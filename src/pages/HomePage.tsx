@@ -14,6 +14,7 @@ import { Star } from "lucide-react";
 import Ayesha from "@/assets/images/team/ayesha.jpg";
 import Tanvir from "@/assets/images/team/tanvir.jpg";
 import Sadia from "@/assets/images/team/sadia.jpg";
+import { Link } from "react-router-dom";
 
 // Team data
 const teamMembers = [
@@ -40,6 +41,7 @@ const teamMembers = [
 export default function HomePage() {
   const navigate = useNavigate();
   const { data: userData, isLoading: isUserLoading } = useUserInfoQuery();
+  console.log("User Data:", userData?.data);
   const {
     data: transactionData,
     isLoading: isTransactionLoading,
@@ -210,7 +212,7 @@ export default function HomePage() {
         </div>
       </section>
 
-       {/* Team Section */}
+      {/* Team Section */}
       <section className="container mx-auto px-4 sm:px-6 lg:px-8 py-16">
         <div>
           <motion.h2
@@ -250,6 +252,24 @@ export default function HomePage() {
         </div>
       </section>
 
+      {/* Call to Action Section */}
+      <section className="container mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        <div className="bg-muted text-center rounded-lg p-8">
+          <h2 className="text-3xl font-bold mb-4">Get Started Today!</h2>
+          <p className="mb-6">
+            Join millions of users and experience seamless digital payments.
+          </p>
+          <Button asChild size="lg">
+            <Link
+              to={
+                userData?.data ? `/${userData.data.role}/overview` : "/register"
+              }
+            >
+              {userData?.data ? "Go to Dashboard" : "Register Now"}
+            </Link>
+          </Button>
+        </div>
+      </section>
     </div>
   );
 }
